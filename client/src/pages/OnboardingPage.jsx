@@ -13,7 +13,7 @@ import {
   ArrowLeft,
   Clock,
   Calendar,
-  Lightbulb,
+  Info,
   Loader2
 } from 'lucide-react'
 
@@ -264,16 +264,12 @@ export default function OnboardingPage() {
                       className="calm-input min-h-[100px] resize-none"
                     />
                   </div>
-                </div>
-
-                <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700">
-                  <div className="flex items-start gap-3">
-                    <Lightbulb className="w-5 h-5 text-gray-500 dark:text-gray-400 mt-0.5" />
-                    <div>
-                      <p className="text-sm font-medium text-gray-700 dark:text-gray-200">Tip</p>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
-                        The more specific you are, the better your AI-generated daily tasks will be.
-                      </p>
+                  <div className="relative group">
+                    <Info className="w-4 h-4 text-gray-400 dark:text-gray-500 cursor-help" />
+                    <div className="absolute left-0 bottom-full mb-2 hidden group-hover:block w-64 p-3 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-xs rounded-lg shadow-lg z-10">
+                      <p className="font-medium mb-1">Tip</p>
+                      <p>The more specific you are, the better your AI-generated daily tasks will be.</p>
+                      <div className="absolute left-4 top-full w-2 h-2 bg-gray-900 dark:bg-gray-100 transform rotate-45 -mt-1"></div>
                     </div>
                   </div>
                 </div>

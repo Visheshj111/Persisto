@@ -12,7 +12,8 @@ import {
   AlertCircle,
   Loader2,
   Sparkles,
-  Zap
+  Zap,
+  Info
 } from 'lucide-react'
 
 export default function SkillsPage() {
@@ -69,7 +70,16 @@ export default function SkillsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-2">My Skills</h1>
+          <div className="flex items-center gap-2 mb-2">
+            <h1 className="text-2xl font-semibold text-gray-800 dark:text-gray-100">My Skills</h1>
+            <div className="relative group">
+              <Info className="w-4 h-4 text-gray-400 dark:text-gray-500 cursor-help" />
+              <div className="absolute left-0 top-full mt-2 hidden group-hover:block w-72 p-3 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-xs rounded-lg shadow-lg z-10">
+                <p>You can have multiple skill journeys at once. Switch between them anytime - your progress is saved! The active skill is what appears on your dashboard.</p>
+                <div className="absolute left-4 bottom-full w-2 h-2 bg-gray-900 dark:bg-gray-100 transform rotate-45 -mb-1"></div>
+              </div>
+            </div>
+          </div>
           <p className="text-gray-500 dark:text-gray-400">Manage your learning journeys</p>
         </div>
         <button
@@ -79,14 +89,6 @@ export default function SkillsPage() {
           <Plus className="w-5 h-5" />
           New Skill
         </button>
-      </div>
-
-      {/* Info banner */}
-      <div className="calm-card bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700">
-        <p className="text-sm text-gray-700 dark:text-gray-300">
-          You can have multiple skill journeys at once. Switch between them anytime - 
-          your progress is saved! The active skill is what appears on your dashboard.
-        </p>
       </div>
 
       {/* Goals List */}
