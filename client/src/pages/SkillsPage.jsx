@@ -12,7 +12,7 @@ import {
   AlertCircle,
   Loader2,
   Sparkles,
-  BookOpen
+  Zap
 } from 'lucide-react'
 
 export default function SkillsPage() {
@@ -50,21 +50,11 @@ export default function SkillsPage() {
     }
   }
 
-  const getGoalTypeIcon = (type) => {
-    switch (type) {
-      case 'skill': return '🎯'
-      case 'habit': return '🔄'
-      case 'project': return '📦'
-      case 'learning': return '📚'
-      default: return '✨'
-    }
-  }
-
   if (isLoading && goals.length === 0) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="animate-breathe">
-          <div className="w-16 h-16 rounded-full bg-gradient-to-r from-sky-400 to-sage-400 opacity-60" />
+          <div className="w-16 h-16 rounded-full bg-gradient-to-r from-gray-400 to-gray-500 opacity-60" />
         </div>
       </div>
     )
@@ -79,8 +69,8 @@ export default function SkillsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold text-calm-800 mb-2">My Skills</h1>
-          <p className="text-calm-500">Manage your learning journeys</p>
+          <h1 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-2">My Skills</h1>
+          <p className="text-gray-500 dark:text-gray-400">Manage your learning journeys</p>
         </div>
         <button
           onClick={() => navigate('/onboarding')}
@@ -92,10 +82,10 @@ export default function SkillsPage() {
       </div>
 
       {/* Info banner */}
-      <div className="calm-card bg-sky-50/50 border-sky-100">
-        <p className="text-sm text-sky-700">
+      <div className="calm-card bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+        <p className="text-sm text-gray-700 dark:text-gray-300">
           You can have multiple skill journeys at once. Switch between them anytime - 
-          your progress is saved! The active skill is what appears on your dashboard. 🎯
+          your progress is saved! The active skill is what appears on your dashboard.
         </p>
       </div>
 
@@ -106,13 +96,13 @@ export default function SkillsPage() {
           animate={{ opacity: 1, scale: 1 }}
           className="calm-card text-center py-12"
         >
-          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-sky-100 to-sage-100 flex items-center justify-center mx-auto mb-6">
-            <BookOpen className="w-10 h-10 text-sage-400" />
+          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700 flex items-center justify-center mx-auto mb-6">
+            <Zap className="w-10 h-10 text-gray-500 dark:text-gray-400" />
           </div>
-          <h2 className="text-xl font-semibold text-calm-700 mb-3">
+          <h2 className="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-3">
             No skills yet
           </h2>
-          <p className="text-calm-500 mb-6 max-w-md mx-auto">
+          <p className="text-gray-500 dark:text-gray-400 mb-6 max-w-md mx-auto">
             Start your first learning journey. Pick a skill you've always wanted to learn!
           </p>
           <button
@@ -138,29 +128,31 @@ export default function SkillsPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05 }}
                 className={`calm-card relative overflow-hidden ${
-                  isActive ? 'ring-2 ring-sky-300 bg-sky-50/30' : ''
+                  isActive ? 'ring-2 ring-gray-400 dark:ring-gray-500 bg-gray-50/30 dark:bg-gray-800/30' : ''
                 }`}
               >
                 {/* Active badge */}
                 {isActive && (
-                  <div className="absolute top-0 right-0 bg-sky-400 text-white text-xs px-3 py-1 rounded-bl-lg font-medium">
+                  <div className="absolute top-0 right-0 bg-black dark:bg-white text-white dark:text-black text-xs px-3 py-1 rounded-bl-lg font-medium">
                     Active
                   </div>
                 )}
 
                 <div className="flex items-start gap-4">
                   {/* Icon */}
-                  <div className="text-3xl">{getGoalTypeIcon(goal.type)}</div>
+                  <div className="w-12 h-12 rounded-xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center flex-shrink-0">
+                    <Target className="w-6 h-6 text-gray-600 dark:text-gray-400" />
+                  </div>
 
                   {/* Content */}
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-calm-800 mb-1 pr-16">{goal.title}</h3>
+                    <h3 className="font-semibold text-gray-800 dark:text-gray-100 mb-1 pr-16">{goal.title}</h3>
                     {goal.description && (
-                      <p className="text-sm text-calm-500 mb-3 line-clamp-2">{goal.description}</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400 mb-3 line-clamp-2">{goal.description}</p>
                     )}
 
                     {/* Stats */}
-                    <div className="flex flex-wrap items-center gap-4 text-sm text-calm-500 mb-3">
+                    <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mb-3">
                       <div className="flex items-center gap-1">
                         <Target className="w-4 h-4" />
                         <span>Day {completedDays + 1} of {totalDays}</span>
@@ -170,7 +162,7 @@ export default function SkillsPage() {
                         <span>{goal.dailyMinutes} min/day</span>
                       </div>
                       {goal.isCompleted && (
-                        <div className="flex items-center gap-1 text-sage-600">
+                        <div className="flex items-center gap-1 text-gray-700 dark:text-gray-300">
                           <CheckCircle2 className="w-4 h-4" />
                           <span>Completed!</span>
                         </div>
@@ -178,15 +170,15 @@ export default function SkillsPage() {
                     </div>
 
                     {/* Progress bar */}
-                    <div className="h-2 bg-calm-100 rounded-full overflow-hidden mb-4">
+                    <div className="h-2 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden mb-4">
                       <motion.div
                         initial={{ width: 0 }}
                         animate={{ width: `${progress}%` }}
                         transition={{ duration: 0.5 }}
                         className={`h-full rounded-full ${
                           isActive 
-                            ? 'bg-gradient-to-r from-sky-400 to-sage-400' 
-                            : 'bg-calm-300'
+                            ? 'bg-gradient-to-r from-gray-600 to-gray-800 dark:from-gray-400 dark:to-gray-200' 
+                            : 'bg-gray-300 dark:bg-gray-600'
                         }`}
                       />
                     </div>
@@ -227,7 +219,7 @@ export default function SkillsPage() {
 
                       <button
                         onClick={() => setDeleteConfirm(goal._id)}
-                        className="p-2 text-calm-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors ml-auto"
+                        className="p-2 text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition-colors ml-auto"
                         title="Delete skill"
                       >
                         <Trash2 className="w-5 h-5" />
@@ -256,19 +248,19 @@ export default function SkillsPage() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-white rounded-2xl p-6 max-w-md w-full shadow-xl"
+              className="bg-white dark:bg-gray-900 rounded-2xl p-6 max-w-md w-full shadow-xl"
             >
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
-                  <AlertCircle className="w-6 h-6 text-red-500" />
+                <div className="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
+                  <AlertCircle className="w-6 h-6 text-red-500 dark:text-red-400" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-calm-800">Delete this skill?</h3>
-                  <p className="text-sm text-calm-500">This action cannot be undone</p>
+                  <h3 className="font-semibold text-gray-800 dark:text-gray-100">Delete this skill?</h3>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">This action cannot be undone</p>
                 </div>
               </div>
 
-              <p className="text-calm-600 mb-6">
+              <p className="text-gray-600 dark:text-gray-300 mb-6">
                 This will permanently delete this skill journey and all your progress. 
                 Your completed tasks and roadmap will be lost.
               </p>

@@ -151,7 +151,7 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-white dark:bg-black">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -164,12 +164,12 @@ export default function OnboardingPage() {
               <div
                 key={s}
                 className={`w-1/4 h-1 rounded-full mx-1 transition-colors duration-300 ${
-                  s <= step ? 'bg-sky-400' : 'bg-calm-200'
+                  s <= step ? 'bg-black dark:bg-white' : 'bg-gray-200 dark:bg-gray-700'
                 }`}
               />
             ))}
           </div>
-          <p className="text-sm text-calm-500 text-center">Step {step} of 4</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400 text-center">Step {step} of 4</p>
         </div>
 
         {/* Step content */}
@@ -184,10 +184,10 @@ export default function OnboardingPage() {
                 exit={{ opacity: 0, x: -20 }}
                 className="flex-1"
               >
-                <h2 className="text-2xl font-semibold text-calm-800 mb-2">
+                <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-2">
                   What kind of goal?
                 </h2>
-                <p className="text-calm-500 mb-6">
+                <p className="text-gray-500 dark:text-gray-400 mb-6">
                   Choose the type that best describes your intention
                 </p>
 
@@ -201,20 +201,20 @@ export default function OnboardingPage() {
                         onClick={() => handleTypeSelect(type)}
                         className={`w-full p-4 rounded-xl border-2 transition-all flex items-center gap-4 text-left ${
                           isSelected
-                            ? 'border-sky-400 bg-sky-50/50'
-                            : 'border-calm-200 hover:border-calm-300 bg-white/50'
+                            ? 'border-black dark:border-white bg-gray-50 dark:bg-gray-800'
+                            : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 bg-white/50 dark:bg-gray-900/50'
                         }`}
                       >
                         <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
-                          isSelected ? 'bg-sky-100' : 'bg-calm-100'
+                          isSelected ? 'bg-black dark:bg-white' : 'bg-gray-100 dark:bg-gray-800'
                         }`}>
-                          <Icon className={`w-6 h-6 ${isSelected ? 'text-sky-500' : 'text-calm-500'}`} />
+                          <Icon className={`w-6 h-6 ${isSelected ? 'text-white dark:text-black' : 'text-gray-500 dark:text-gray-400'}`} />
                         </div>
                         <div>
-                          <p className={`font-medium ${isSelected ? 'text-sky-700' : 'text-calm-700'}`}>
+                          <p className={`font-medium ${isSelected ? 'text-black dark:text-white' : 'text-gray-700 dark:text-gray-200'}`}>
                             {type.label}
                           </p>
-                          <p className="text-sm text-calm-400">{type.description}</p>
+                          <p className="text-sm text-gray-400 dark:text-gray-500">{type.description}</p>
                         </div>
                       </button>
                     )
@@ -232,16 +232,16 @@ export default function OnboardingPage() {
                 exit={{ opacity: 0, x: -20 }}
                 className="flex-1"
               >
-                <h2 className="text-2xl font-semibold text-calm-800 mb-2">
+                <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-2">
                   Define your goal
                 </h2>
-                <p className="text-calm-500 mb-6">
+                <p className="text-gray-500 dark:text-gray-400 mb-6">
                   Be specific - clarity helps create better daily tasks
                 </p>
 
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-calm-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
                       What do you want to achieve?
                     </label>
                     <input
@@ -254,7 +254,7 @@ export default function OnboardingPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-calm-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
                       Any additional details? (optional)
                     </label>
                     <textarea
@@ -266,12 +266,12 @@ export default function OnboardingPage() {
                   </div>
                 </div>
 
-                <div className="mt-6 p-4 bg-sky-50/50 rounded-xl border border-sky-100">
+                <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700">
                   <div className="flex items-start gap-3">
-                    <Lightbulb className="w-5 h-5 text-sky-500 mt-0.5" />
+                    <Lightbulb className="w-5 h-5 text-gray-500 dark:text-gray-400 mt-0.5" />
                     <div>
-                      <p className="text-sm font-medium text-sky-700">Tip</p>
-                      <p className="text-sm text-sky-600">
+                      <p className="text-sm font-medium text-gray-700 dark:text-gray-200">Tip</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
                         The more specific you are, the better your AI-generated daily tasks will be.
                       </p>
                     </div>
@@ -289,15 +289,15 @@ export default function OnboardingPage() {
                 exit={{ opacity: 0, x: -20 }}
                 className="flex-1"
               >
-                <h2 className="text-2xl font-semibold text-calm-800 mb-2">
+                <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-2">
                   How many days?
                 </h2>
-                <p className="text-calm-500 mb-6">
+                <p className="text-gray-500 dark:text-gray-400 mb-6">
                   Choose a timeline that feels comfortable, not rushed
                 </p>
 
                 <div className="flex items-center gap-4 mb-6">
-                  <Calendar className="w-6 h-6 text-calm-400" />
+                  <Calendar className="w-6 h-6 text-gray-400 dark:text-gray-500" />
                   <div className="flex-1">
                     <input
                       type="range"
@@ -305,7 +305,7 @@ export default function OnboardingPage() {
                       max="180"
                       value={totalDays}
                       onChange={(e) => handleDaysChange(parseInt(e.target.value))}
-                      className="w-full accent-sky-400"
+                      className="w-full accent-gray-800 dark:accent-white"
                     />
                   </div>
                   <div className="w-20 text-center">
@@ -317,7 +317,7 @@ export default function OnboardingPage() {
                       onChange={(e) => handleDaysChange(parseInt(e.target.value) || 7)}
                       className="w-full text-center calm-input py-2"
                     />
-                    <p className="text-xs text-calm-400 mt-1">days</p>
+                    <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">days</p>
                   </div>
                 </div>
 
@@ -328,24 +328,24 @@ export default function OnboardingPage() {
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
-                      className="p-4 bg-warmth-50 rounded-xl border border-warmth-200 mb-6"
+                      className="p-4 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 mb-6"
                     >
-                      <p className="text-warmth-700 text-sm mb-3">
+                      <p className="text-gray-700 dark:text-gray-300 text-sm mb-3">
                         {timelineSuggestion.message}
                       </p>
-                      <p className="text-warmth-600 text-xs italic mb-3">
+                      <p className="text-gray-600 dark:text-gray-400 text-xs italic mb-3">
                         {timelineSuggestion.encouragement}
                       </p>
                       <div className="flex gap-2">
                         <button
                           onClick={handleAcceptSuggestion}
-                          className="text-sm px-4 py-2 bg-warmth-100 text-warmth-700 rounded-lg hover:bg-warmth-200 transition-colors"
+                          className="text-sm px-4 py-2 bg-black dark:bg-white text-white dark:text-black rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors"
                         >
                           Take {timelineSuggestion.suggestedDays} days instead
                         </button>
                         <button
                           onClick={() => setShowSuggestion(false)}
-                          className="text-sm px-4 py-2 text-warmth-600 hover:text-warmth-700 transition-colors"
+                          className="text-sm px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors"
                         >
                           Keep my choice
                         </button>
@@ -355,8 +355,8 @@ export default function OnboardingPage() {
                 </AnimatePresence>
 
                 {!showSuggestion && (
-                  <div className="p-4 bg-sage-50/50 rounded-xl border border-sage-100">
-                    <p className="text-sm text-sage-700">
+                  <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700">
+                    <p className="text-sm text-gray-700 dark:text-gray-300">
                       {timelineSuggestion?.message || "Your timeline looks thoughtful and achievable."}
                     </p>
                   </div>
@@ -373,10 +373,10 @@ export default function OnboardingPage() {
                 exit={{ opacity: 0, x: -20 }}
                 className="flex-1"
               >
-                <h2 className="text-2xl font-semibold text-calm-800 mb-2">
+                <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-2">
                   Daily time commitment
                 </h2>
-                <p className="text-calm-500 mb-6">
+                <p className="text-gray-500 dark:text-gray-400 mb-6">
                   How much time can you dedicate each day?
                 </p>
 
@@ -387,15 +387,15 @@ export default function OnboardingPage() {
                       onClick={() => setDailyMinutes(option.value)}
                       className={`p-4 rounded-xl border-2 transition-all ${
                         dailyMinutes === option.value
-                          ? 'border-sky-400 bg-sky-50/50'
-                          : 'border-calm-200 hover:border-calm-300 bg-white/50'
+                          ? 'border-black dark:border-white bg-gray-50 dark:bg-gray-800'
+                          : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 bg-white/50 dark:bg-gray-900/50'
                       }`}
                     >
                       <Clock className={`w-5 h-5 mx-auto mb-2 ${
-                        dailyMinutes === option.value ? 'text-sky-500' : 'text-calm-400'
+                        dailyMinutes === option.value ? 'text-black dark:text-white' : 'text-gray-400 dark:text-gray-500'
                       }`} />
                       <p className={`font-medium ${
-                        dailyMinutes === option.value ? 'text-sky-700' : 'text-calm-700'
+                        dailyMinutes === option.value ? 'text-black dark:text-white' : 'text-gray-700 dark:text-gray-200'
                       }`}>
                         {option.label}
                       </p>
@@ -404,26 +404,26 @@ export default function OnboardingPage() {
                 </div>
 
                 {/* Summary */}
-                <div className="p-4 bg-calm-50 rounded-xl border border-calm-200">
-                  <h3 className="font-medium text-calm-700 mb-3">Your plan summary</h3>
+                <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+                  <h3 className="font-medium text-gray-700 dark:text-gray-200 mb-3">Your plan summary</h3>
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
-                      <span className="text-calm-500">Goal type:</span>
-                      <span className="text-calm-700">{goalType?.label}</span>
+                      <span className="text-gray-500 dark:text-gray-400">Goal type:</span>
+                      <span className="text-gray-700 dark:text-gray-200">{goalType?.label}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-calm-500">Goal:</span>
-                      <span className="text-calm-700 text-right max-w-[200px] truncate">
+                      <span className="text-gray-500 dark:text-gray-400">Goal:</span>
+                      <span className="text-gray-700 dark:text-gray-200 text-right max-w-[200px] truncate">
                         {goalTitle}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-calm-500">Duration:</span>
-                      <span className="text-calm-700">{totalDays} days</span>
+                      <span className="text-gray-500 dark:text-gray-400">Duration:</span>
+                      <span className="text-gray-700 dark:text-gray-200">{totalDays} days</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-calm-500">Daily time:</span>
-                      <span className="text-calm-700">{dailyMinutes} minutes</span>
+                      <span className="text-gray-500 dark:text-gray-400">Daily time:</span>
+                      <span className="text-gray-700 dark:text-gray-200">{dailyMinutes} minutes</span>
                     </div>
                   </div>
                 </div>
@@ -432,7 +432,7 @@ export default function OnboardingPage() {
           </AnimatePresence>
 
           {/* Navigation buttons */}
-          <div className="flex justify-between mt-8 pt-4 border-t border-calm-100">
+          <div className="flex justify-between mt-8 pt-4 border-t border-gray-100 dark:border-gray-700">
             {step > 1 ? (
               <button
                 onClick={handleBack}

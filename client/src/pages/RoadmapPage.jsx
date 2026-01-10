@@ -66,7 +66,7 @@ export default function RoadmapPage() {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="animate-breathe">
-          <div className="w-16 h-16 rounded-full bg-gradient-to-r from-sky-400 to-sage-400 opacity-60" />
+          <div className="w-16 h-16 rounded-full bg-gradient-to-r from-gray-400 to-gray-500 opacity-60" />
         </div>
       </div>
     )
@@ -82,13 +82,13 @@ export default function RoadmapPage() {
       <div className="flex items-center gap-4">
         <button
           onClick={() => navigate('/')}
-          className="p-2 rounded-lg hover:bg-calm-100 transition-colors"
+          className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
         >
-          <ArrowLeft className="w-5 h-5 text-calm-500" />
+          <ArrowLeft className="w-5 h-5 text-gray-500 dark:text-gray-400" />
         </button>
         <div>
-          <h1 className="text-2xl font-semibold text-calm-800">Your Roadmap</h1>
-          <p className="text-calm-500">{activeGoal?.title || 'Skill Journey'}</p>
+          <h1 className="text-2xl font-semibold text-gray-800 dark:text-gray-100">Your Roadmap</h1>
+          <p className="text-gray-500 dark:text-gray-400">{activeGoal?.title || 'Skill Journey'}</p>
         </div>
       </div>
 
@@ -97,15 +97,15 @@ export default function RoadmapPage() {
         {/* Scroll buttons */}
         <button
           onClick={() => scroll('left')}
-          className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white/90 rounded-full shadow-lg flex items-center justify-center hover:bg-white transition-colors"
+          className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white/90 dark:bg-gray-800/90 rounded-full shadow-lg flex items-center justify-center hover:bg-white dark:hover:bg-gray-800 transition-colors"
         >
-          <ChevronLeft className="w-5 h-5 text-calm-600" />
+          <ChevronLeft className="w-5 h-5 text-gray-600 dark:text-gray-400" />
         </button>
         <button
           onClick={() => scroll('right')}
-          className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white/90 rounded-full shadow-lg flex items-center justify-center hover:bg-white transition-colors"
+          className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white/90 dark:bg-gray-800/90 rounded-full shadow-lg flex items-center justify-center hover:bg-white dark:hover:bg-gray-800 transition-colors"
         >
-          <ChevronRight className="w-5 h-5 text-calm-600" />
+          <ChevronRight className="w-5 h-5 text-gray-600 dark:text-gray-400" />
         </button>
 
         {/* Scrollable container */}
@@ -192,19 +192,19 @@ export default function RoadmapPage() {
                   <div className={`
                     w-14 h-14 rounded-full flex items-center justify-center
                     transition-all duration-300 hover:scale-110
-                    ${isCompleted ? 'bg-gradient-to-br from-sage-400 to-sage-500 shadow-lg shadow-sage-200' :
-                      isNext ? 'bg-gradient-to-br from-sky-400 to-sky-500 shadow-lg shadow-sky-200 ring-4 ring-sky-200 animate-pulse' :
-                      isSkipped ? 'bg-calm-300' :
-                      'bg-calm-200 hover:bg-calm-300'}
+                    ${isCompleted ? 'bg-gradient-to-br from-gray-600 to-gray-800 dark:from-gray-300 dark:to-gray-100 shadow-lg shadow-gray-300 dark:shadow-gray-800' :
+                      isNext ? 'bg-gradient-to-br from-gray-500 to-gray-700 dark:from-gray-400 dark:to-gray-200 shadow-lg shadow-gray-300 dark:shadow-gray-800 ring-4 ring-gray-300 dark:ring-gray-600 animate-pulse' :
+                      isSkipped ? 'bg-gray-300 dark:bg-gray-600' :
+                      'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600'}
                   `}>
                     {isCompleted ? (
-                      <CheckCircle2 className="w-7 h-7 text-white" />
+                      <CheckCircle2 className="w-7 h-7 text-white dark:text-gray-900" />
                     ) : isNext ? (
-                      <Circle className="w-7 h-7 text-white" />
+                      <Circle className="w-7 h-7 text-white dark:text-gray-900" />
                     ) : isLocked ? (
-                      <Lock className="w-5 h-5 text-calm-400" />
+                      <Lock className="w-5 h-5 text-gray-400 dark:text-gray-500" />
                     ) : (
-                      <Circle className="w-6 h-6 text-calm-400" />
+                      <Circle className="w-6 h-6 text-gray-400 dark:text-gray-500" />
                     )}
                   </div>
 
@@ -216,16 +216,16 @@ export default function RoadmapPage() {
                     `}
                   >
                     <p className={`text-sm font-bold ${
-                      isCompleted ? 'text-sage-600' :
-                      isNext ? 'text-sky-600' :
-                      'text-calm-500'
+                      isCompleted ? 'text-gray-700 dark:text-gray-200' :
+                      isNext ? 'text-gray-800 dark:text-gray-100' :
+                      'text-gray-500 dark:text-gray-400'
                     }`}>
                       Day {task.dayNumber}
                     </p>
                     <p className={`text-xs max-w-[100px] truncate ${
-                      isCompleted ? 'text-sage-500' :
-                      isNext ? 'text-sky-500' :
-                      'text-calm-400'
+                      isCompleted ? 'text-gray-500 dark:text-gray-400' :
+                      isNext ? 'text-gray-600 dark:text-gray-300' :
+                      'text-gray-400 dark:text-gray-500'
                     }`}>
                       {task.title.replace(`Day ${task.dayNumber}: `, '').substring(0, 20)}
                     </p>
@@ -242,7 +242,7 @@ export default function RoadmapPage() {
         {[...new Set(allTasks.map(t => t.phase))].filter(Boolean).map((phase, idx) => (
           <span 
             key={idx} 
-            className="px-3 py-1 bg-calm-100 text-calm-600 text-xs rounded-full"
+            className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 text-xs rounded-full"
           >
             {phase}
           </span>
@@ -252,16 +252,16 @@ export default function RoadmapPage() {
       {/* Legend */}
       <div className="flex justify-center gap-6 text-sm">
         <div className="flex items-center gap-2">
-          <div className="w-4 h-4 rounded-full bg-sage-400" />
-          <span className="text-calm-500">Completed</span>
+          <div className="w-4 h-4 rounded-full bg-gray-700 dark:bg-gray-300" />
+          <span className="text-gray-500 dark:text-gray-400">Completed</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-4 h-4 rounded-full bg-sky-400 animate-pulse" />
-          <span className="text-calm-500">Current</span>
+          <div className="w-4 h-4 rounded-full bg-gray-500 animate-pulse" />
+          <span className="text-gray-500 dark:text-gray-400">Current</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-4 h-4 rounded-full bg-calm-200" />
-          <span className="text-calm-500">Upcoming</span>
+          <div className="w-4 h-4 rounded-full bg-gray-200 dark:bg-gray-700" />
+          <span className="text-gray-500 dark:text-gray-400">Upcoming</span>
         </div>
       </div>
 
@@ -279,25 +279,25 @@ export default function RoadmapPage() {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-white rounded-2xl p-6 max-w-lg w-full max-h-[80vh] overflow-y-auto shadow-xl"
+              className="bg-white dark:bg-gray-900 rounded-2xl p-6 max-w-lg w-full max-h-[80vh] overflow-y-auto shadow-xl"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Modal Header */}
               <div className="flex items-start justify-between mb-4">
                 <div>
                   {selectedTask.phase && (
-                    <span className="text-xs text-sky-500 font-medium">{selectedTask.phase}</span>
+                    <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">{selectedTask.phase}</span>
                   )}
-                  <h3 className="text-lg font-semibold text-calm-800">
+                  <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
                     Day {selectedTask.dayNumber}: {selectedTask.title}
                   </h3>
-                  <div className="flex items-center gap-2 mt-1 text-sm text-calm-500">
+                  <div className="flex items-center gap-2 mt-1 text-sm text-gray-500 dark:text-gray-400">
                     <Clock className="w-4 h-4" />
                     <span>{selectedTask.estimatedMinutes} minutes</span>
                     <span className={`ml-2 px-2 py-0.5 rounded-full text-xs ${
-                      selectedTask.status === 'completed' ? 'bg-sage-100 text-sage-700' :
-                      selectedTask.status === 'pending' ? 'bg-sky-100 text-sky-700' :
-                      'bg-calm-100 text-calm-600'
+                      selectedTask.status === 'completed' ? 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300' :
+                      selectedTask.status === 'pending' ? 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400' :
+                      'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400'
                     }`}>
                       {selectedTask.status}
                     </span>
@@ -305,35 +305,35 @@ export default function RoadmapPage() {
                 </div>
                 <button
                   onClick={() => setSelectedTask(null)}
-                  className="p-2 hover:bg-calm-100 rounded-lg"
+                  className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
                 >
-                  <X className="w-5 h-5 text-calm-400" />
+                  <X className="w-5 h-5 text-gray-400 dark:text-gray-500" />
                 </button>
               </div>
 
               {/* Description */}
-              <p className="text-calm-600 mb-4">{selectedTask.description}</p>
+              <p className="text-gray-600 dark:text-gray-300 mb-4">{selectedTask.description}</p>
 
               {/* Skill Progression */}
               {selectedTask.skillProgression && (
-                <div className="p-3 bg-calm-50 rounded-lg mb-4">
-                  <p className="text-sm font-medium text-calm-700">Outcome</p>
-                  <p className="text-sm text-calm-600">{selectedTask.skillProgression}</p>
+                <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg mb-4">
+                  <p className="text-sm font-medium text-gray-700 dark:text-gray-200">Outcome</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">{selectedTask.skillProgression}</p>
                 </div>
               )}
 
               {/* What to Learn */}
               {selectedTask.whatToLearn && selectedTask.whatToLearn.length > 0 && (
                 <div className="mb-4">
-                  <p className="text-sm font-semibold text-calm-700 mb-2 flex items-center gap-1">
-                    <Target className="w-4 h-4 text-sky-500" />
+                  <p className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2 flex items-center gap-1">
+                    <Target className="w-4 h-4 text-gray-500 dark:text-gray-400" />
                     Topics
                   </p>
                   <div className="space-y-1">
                     {selectedTask.whatToLearn.map((item, idx) => (
                       <div key={idx} className="flex items-start gap-2 text-sm">
-                        <div className="w-1.5 h-1.5 rounded-full bg-sky-400 mt-2 flex-shrink-0" />
-                        <span className="text-calm-600">{item}</span>
+                        <div className="w-1.5 h-1.5 rounded-full bg-gray-400 dark:bg-gray-500 mt-2 flex-shrink-0" />
+                        <span className="text-gray-600 dark:text-gray-400">{item}</span>
                       </div>
                     ))}
                   </div>
@@ -343,8 +343,8 @@ export default function RoadmapPage() {
               {/* Resources */}
               {selectedTask.resources && selectedTask.resources.length > 0 && (
                 <div className="mb-4">
-                  <p className="text-sm font-semibold text-calm-700 mb-2 flex items-center gap-1">
-                    <BookOpen className="w-4 h-4 text-sage-500" />
+                  <p className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2 flex items-center gap-1">
+                    <BookOpen className="w-4 h-4 text-gray-500 dark:text-gray-400" />
                     Resources
                   </p>
                   <div className="space-y-2">
@@ -356,24 +356,20 @@ export default function RoadmapPage() {
                           href={resource.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center gap-2 p-2 bg-calm-50 rounded-lg hover:bg-calm-100 transition-colors"
+                          className="flex items-center gap-2 p-2 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                         >
-                          <div className={`w-6 h-6 rounded flex items-center justify-center ${
-                            resource.type === 'video' ? 'bg-red-100 text-red-500' :
-                            resource.type === 'docs' ? 'bg-blue-100 text-blue-500' :
-                            'bg-sage-100 text-sage-500'
-                          }`}>
+                          <div className="w-6 h-6 rounded flex items-center justify-center bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400">
                             <IconComponent className="w-3 h-3" />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm text-calm-700 truncate">
+                            <p className="text-sm text-gray-700 dark:text-gray-200 truncate">
                               {resource.title || resource.url}
                             </p>
                             {resource.creator && (
-                              <p className="text-xs text-calm-400">{resource.creator}</p>
+                              <p className="text-xs text-gray-400 dark:text-gray-500">{resource.creator}</p>
                             )}
                           </div>
-                          <ExternalLink className="w-4 h-4 text-calm-400" />
+                          <ExternalLink className="w-4 h-4 text-gray-400 dark:text-gray-500" />
                         </a>
                       )
                     })}
@@ -384,14 +380,14 @@ export default function RoadmapPage() {
               {/* Action Items */}
               {selectedTask.actionItems && selectedTask.actionItems.length > 0 && (
                 <div className="mb-4">
-                  <p className="text-sm font-semibold text-calm-700 mb-2">Tasks</p>
+                  <p className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Tasks</p>
                   <div className="space-y-2">
                     {selectedTask.actionItems.map((item, idx) => (
                       <div key={idx} className="flex items-start gap-2 text-sm">
                         <div className={`w-5 h-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center ${
                           selectedTask.status === 'completed' || item.completed
-                            ? 'border-sage-400 bg-sage-400'
-                            : 'border-calm-300'
+                            ? 'border-gray-500 bg-gray-500'
+                            : 'border-gray-300 dark:border-gray-600'
                         }`}>
                           {(selectedTask.status === 'completed' || item.completed) && (
                             <CheckCircle2 className="w-3 h-3 text-white" />
@@ -399,8 +395,8 @@ export default function RoadmapPage() {
                         </div>
                         <span className={`${
                           selectedTask.status === 'completed' || item.completed
-                            ? 'text-calm-500 line-through'
-                            : 'text-calm-700'
+                            ? 'text-gray-400 dark:text-gray-500 line-through'
+                            : 'text-gray-700 dark:text-gray-300'
                         }`}>
                           {typeof item === 'string' ? item : item.text}
                         </span>

@@ -11,7 +11,7 @@ import {
   ChevronUp,
   Plus,
   Loader2,
-  Leaf,
+  Zap,
   Sun,
   Moon,
   Coffee,
@@ -19,12 +19,9 @@ import {
   BookOpen,
   Play,
   FileText,
-  Target,
-  Users
+  Target
 } from 'lucide-react'
 import { format } from 'date-fns'
-import api from '../utils/api'
-import UserProfileModal from '../components/UserProfileModal'
 
 export default function DashboardPage() {
   const navigate = useNavigate()
@@ -44,22 +41,10 @@ export default function DashboardPage() {
   const [completing, setCompleting] = useState(false)
   const [skipping, setSkipping] = useState(false)
   const [showConfirmation, setShowConfirmation] = useState(null)
-  const [friends, setFriends] = useState([])
-  const [selectedUserId, setSelectedUserId] = useState(null)
 
   useEffect(() => {
     fetchTodayTask()
-    fetchFriends()
   }, [fetchTodayTask])
-
-  const fetchFriends = async () => {
-    try {
-      const res = await api.get('/users/friends')
-      setFriends(res.data)
-    } catch (error) {
-      console.error('Failed to fetch friends:', error)
-    }
-  }
 
   const getGreeting = () => {
     const hour = new Date().getHours()
@@ -123,8 +108,8 @@ export default function DashboardPage() {
           transition={{ duration: 2, repeat: Infinity }}
           className="flex flex-col items-center gap-4"
         >
-          <div className="w-16 h-16 rounded-full bg-gradient-to-r from-sky-400 to-sage-400 opacity-60" />
-          <p className="text-calm-500">Loading your day...</p>
+          <div className="w-16 h-16 rounded-full bg-gradient-to-r from-gray-400 to-gray-500 opacity-60" />
+          <p className="text-gray-500 dark:text-gray-400">Loading your day...</p>
         </motion.div>
       </div>
     )
@@ -138,13 +123,13 @@ export default function DashboardPage() {
         animate={{ opacity: 1, y: 0 }}
         className="text-center py-12"
       >
-        <div className="w-24 h-24 rounded-full bg-gradient-to-br from-sky-100 to-sage-100 flex items-center justify-center mx-auto mb-6">
-          <Leaf className="w-12 h-12 text-sage-400" />
+        <div className="w-24 h-24 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700 flex items-center justify-center mx-auto mb-6">
+          <Zap className="w-12 h-12 text-gray-500 dark:text-gray-400" />
         </div>
-        <h2 className="text-2xl font-semibold text-calm-700 mb-3">
+        <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-3">
           No active skill
         </h2>
-        <p className="text-calm-500 mb-8 max-w-md mx-auto">
+        <p className="text-gray-500 dark:text-gray-400 mb-8 max-w-md mx-auto">
           Create a skill to receive your daily tasks.
         </p>
         <button
@@ -172,22 +157,22 @@ export default function DashboardPage() {
           transition={{ type: 'spring', damping: 15 }}
           className={`w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 ${
             showConfirmation === 'complete' 
-              ? 'bg-gradient-to-br from-sage-100 to-sky-100' 
-              : 'bg-gradient-to-br from-calm-100 to-sky-100'
+              ? 'bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700' 
+              : 'bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700'
           }`}
         >
           {showConfirmation === 'complete' ? (
-            <Sparkles className="w-12 h-12 text-sage-500" />
+            <Sparkles className="w-12 h-12 text-gray-600 dark:text-gray-300" />
           ) : (
-            <Leaf className="w-12 h-12 text-sky-400" />
+            <Zap className="w-12 h-12 text-gray-500 dark:text-gray-400" />
           )}
         </motion.div>
-        <h2 className="text-2xl font-semibold text-calm-700 mb-3">
+        <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-3">
           {showConfirmation === 'complete' 
             ? "Day completed" 
             : "Task skipped"}
         </h2>
-        <p className="text-calm-500 max-w-md mx-auto">
+        <p className="text-gray-500 dark:text-gray-400 max-w-md mx-auto">
           {showConfirmation === 'complete'
             ? "Tomorrow's task will be available at midnight."
             : "Task moved to tomorrow. No schedule adjustment needed."}
@@ -205,11 +190,11 @@ export default function DashboardPage() {
       {/* Main Content - Left Column */}
       <div className="flex-1 space-y-6 min-w-0">
         {/* Greeting */}
-        <div className="flex items-center gap-3 text-calm-600">
+        <div className="flex items-center gap-3 text-gray-600 dark:text-gray-400">
           <GreetingIcon className="w-5 h-5" />
           <span>{greeting.text}</span>
-          <span className="text-calm-300">•</span>
-          <span className="text-calm-400">{format(new Date(), 'EEEE, MMMM d')}</span>
+          <span className="text-gray-300 dark:text-gray-600">•</span>
+          <span className="text-gray-400 dark:text-gray-500">{format(new Date(), 'EEEE, MMMM d')}</span>
         </div>
 
         {/* Goal Progress */}
@@ -217,24 +202,24 @@ export default function DashboardPage() {
           <div className="calm-card">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <p className="text-sm text-calm-500">Your journey</p>
-                <h3 className="font-semibold text-calm-800">{activeGoal.title}</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Your journey</p>
+                <h3 className="font-semibold text-gray-800 dark:text-gray-100">{activeGoal.title}</h3>
               </div>
               <div className="text-right">
-                <p className="text-2xl font-bold text-sky-500">{activeGoal.progress || 0}%</p>
-                <p className="text-xs text-calm-400">
+                <p className="text-2xl font-bold text-gray-800 dark:text-gray-100">{activeGoal.progress || 0}%</p>
+                <p className="text-xs text-gray-400 dark:text-gray-500">
                   Day {activeGoal.completedDays + 1} of {activeGoal.totalDays}
                 </p>
               </div>
             </div>
             
             {/* Progress bar */}
-            <div className="h-2 bg-calm-100 rounded-full overflow-hidden">
+            <div className="h-2 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
               <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: `${activeGoal.progress || 0}%` }}
                 transition={{ duration: 0.8, ease: 'easeOut' }}
-                className="h-full bg-gradient-to-r from-sky-400 to-sage-400 rounded-full"
+                className="h-full bg-gradient-to-r from-gray-600 to-gray-800 dark:from-gray-400 dark:to-gray-200 rounded-full"
               />
             </div>
           </div>
@@ -252,29 +237,29 @@ export default function DashboardPage() {
           <div className="flex items-start justify-between mb-4">
             <div>
               {todayTask.phase && (
-                <p className="text-xs text-sky-400 font-medium mb-1">{todayTask.phase}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 font-medium mb-1">{todayTask.phase}</p>
               )}
-              <p className="text-sm text-sky-500 font-medium mb-1">Today's Focus</p>
-              <h2 className="text-xl font-semibold text-calm-800">{todayTask.title}</h2>
+              <p className="text-sm text-gray-600 dark:text-gray-400 font-medium mb-1">Today's Focus</p>
+              <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100">{todayTask.title}</h2>
             </div>
-            <div className="flex items-center gap-1 text-calm-400 text-sm">
+            <div className="flex items-center gap-1 text-gray-400 dark:text-gray-500 text-sm">
               <Clock className="w-4 h-4" />
               <span>{todayTask.estimatedMinutes} min</span>
             </div>
           </div>
 
-          <p className="text-calm-600 mb-4 leading-relaxed">
+          <p className="text-gray-600 dark:text-gray-300 mb-4 leading-relaxed">
             {todayTask.description}
           </p>
 
           {/* Skill Progression - Outcome */}
           {todayTask.skillProgression && (
-            <div className="mb-6 p-4 bg-calm-50 rounded-xl border border-calm-100">
+            <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700">
               <div className="flex items-center gap-2 mb-1">
-                <Target className="w-4 h-4 text-calm-500" />
-                <span className="text-sm font-semibold text-calm-700">Outcome</span>
+                <Target className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                <span className="text-sm font-semibold text-gray-700 dark:text-gray-200">Outcome</span>
               </div>
-              <p className="text-calm-700">{todayTask.skillProgression}</p>
+              <p className="text-gray-700 dark:text-gray-300">{todayTask.skillProgression}</p>
             </div>
           )}
 
@@ -283,9 +268,9 @@ export default function DashboardPage() {
             <div className="mb-6">
               <button
                 onClick={() => setShowWhatToLearn(!showWhatToLearn)}
-                className="flex items-center gap-2 text-sm font-semibold text-calm-700 mb-3 hover:text-calm-800"
+                className="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-200 mb-3 hover:text-gray-800 dark:hover:text-gray-100"
               >
-                <Target className="w-4 h-4 text-sky-500" />
+                <Target className="w-4 h-4 text-gray-500 dark:text-gray-400" />
                 What to learn (brief)
                 {showWhatToLearn ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
               </button>
@@ -296,12 +281,12 @@ export default function DashboardPage() {
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: 'auto' }}
                     exit={{ opacity: 0, height: 0 }}
-                    className="bg-sky-50/50 rounded-xl p-4 space-y-2"
+                    className="bg-gray-50 dark:bg-gray-800 rounded-xl p-4 space-y-2"
                   >
                     {todayTask.whatToLearn.map((item, index) => (
                       <div key={index} className="flex items-start gap-2">
-                        <div className="w-1.5 h-1.5 rounded-full bg-sky-400 mt-2 flex-shrink-0" />
-                        <span className="text-calm-700">{item}</span>
+                        <div className="w-1.5 h-1.5 rounded-full bg-gray-400 dark:bg-gray-500 mt-2 flex-shrink-0" />
+                        <span className="text-gray-700 dark:text-gray-300">{item}</span>
                       </div>
                     ))}
                   </motion.div>
@@ -315,7 +300,7 @@ export default function DashboardPage() {
             <div className="mb-6">
               <button
                 onClick={() => setShowActionItems(!showActionItems)}
-                className="flex items-center gap-2 text-sm font-medium text-calm-600 mb-3 hover:text-calm-700"
+                className="flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-400 mb-3 hover:text-gray-700 dark:hover:text-gray-300"
               >
                 {showActionItems ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                 Action items ({todayTask.actionItems.filter(i => i.completed).length}/{todayTask.actionItems.length})
@@ -335,14 +320,14 @@ export default function DashboardPage() {
                         onClick={() => handleActionItemToggle(index)}
                         className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-colors ${
                           item.completed 
-                            ? 'bg-sage-50/50 text-calm-500' 
-                            : 'bg-calm-50 text-calm-700 hover:bg-calm-100'
+                            ? 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500' 
+                            : 'bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
                         }`}
                       >
                         <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
                           item.completed 
-                            ? 'border-sage-400 bg-sage-400' 
-                            : 'border-calm-300'
+                            ? 'border-gray-500 bg-gray-500' 
+                            : 'border-gray-300 dark:border-gray-600'
                         }`}>
                           {item.completed && <CheckCircle2 className="w-4 h-4 text-white" />}
                         </div>
@@ -370,8 +355,8 @@ export default function DashboardPage() {
                   disabled={completing || skipping || !allItemsCompleted}
                   className={`flex-1 calm-button flex items-center justify-center gap-2 disabled:opacity-50 ${
                     allItemsCompleted 
-                      ? 'bg-gradient-to-r from-sage-400 to-sage-500 text-white hover:from-sage-500 hover:to-sage-600' 
-                      : 'bg-calm-200 text-calm-400 cursor-not-allowed'
+                      ? 'bg-black text-white hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200' 
+                      : 'bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed'
                   }`}
                   title={!allItemsCompleted ? 'Complete all action items first' : ''}
                 >
@@ -398,60 +383,9 @@ export default function DashboardPage() {
             </button>
           </div>
 
-          <p className="text-xs text-calm-400 text-center mt-4">
+          <p className="text-xs text-gray-400 dark:text-gray-500 text-center mt-4">
             Skipped tasks are moved to tomorrow.
           </p>
-        </motion.div>
-      )}
-
-      {/* Friends Section */}
-      {friends.length > 0 && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="calm-card"
-        >
-          <h2 className="font-semibold text-calm-700 mb-3 flex items-center gap-2">
-            <Users className="w-5 h-5 text-sage-500" />
-            Your Friends
-          </h2>
-          <div className="space-y-3">
-            {friends.map((friend) => (
-              <button
-                key={friend.id}
-                onClick={() => setSelectedUserId(friend.id)}
-                className="w-full flex items-center gap-3 p-3 rounded-xl bg-calm-50 hover:bg-calm-100 transition-colors text-left"
-              >
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-sage-300 to-sky-300 flex items-center justify-center overflow-hidden flex-shrink-0">
-                  {friend.picture ? (
-                    <img src={friend.picture} alt={friend.name} className="w-full h-full object-cover" />
-                  ) : (
-                    <span className="text-sm font-bold text-white">{friend.name?.charAt(0)}</span>
-                  )}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <p className="font-medium text-calm-700 truncate">{friend.name}</p>
-                    <span className="text-xs text-calm-400">{friend.progressPercent}%</span>
-                  </div>
-                  {friend.currentSkill ? (
-                    <p className="text-sm text-calm-500 truncate">
-                      {friend.currentSkill} {friend.currentDay && <span className="text-calm-400">• Day {friend.currentDay}</span>}
-                    </p>
-                  ) : (
-                    <p className="text-sm text-calm-400">No active skill</p>
-                  )}
-                </div>
-                <div className="w-12 h-1.5 bg-calm-200 rounded-full overflow-hidden flex-shrink-0">
-                  <div 
-                    className="h-full bg-gradient-to-r from-sage-400 to-sky-400 rounded-full"
-                    style={{ width: `${friend.progressPercent}%` }}
-                  />
-                </div>
-              </button>
-            ))}
-          </div>
         </motion.div>
       )}
       </div>
@@ -467,8 +401,8 @@ export default function DashboardPage() {
               transition={{ delay: 0.2 }}
               className="calm-card"
             >
-              <h3 className="font-semibold text-calm-700 mb-4 flex items-center gap-2">
-                <BookOpen className="w-5 h-5 text-sage-500" />
+              <h3 className="font-semibold text-gray-700 dark:text-gray-200 mb-4 flex items-center gap-2">
+                <BookOpen className="w-5 h-5 text-gray-500 dark:text-gray-400" />
                 Learn from
               </h3>
               <div className="space-y-3">
@@ -480,22 +414,22 @@ export default function DashboardPage() {
                       href={resource.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-start gap-3 p-3 rounded-xl bg-calm-50 hover:bg-calm-100 transition-colors group"
+                      className="flex items-start gap-3 p-3 rounded-xl bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors group"
                     >
                       <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${
-                        resource.type === 'video' ? 'bg-red-100 text-red-500' :
-                        resource.type === 'docs' ? 'bg-blue-100 text-blue-500' :
-                        'bg-sage-100 text-sage-500'
+                        resource.type === 'video' ? 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300' :
+                        resource.type === 'docs' ? 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300' :
+                        'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300'
                       }`}>
                         <IconComponent className="w-5 h-5" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-calm-700 font-medium group-hover:text-sky-600 text-sm flex items-center gap-1">
+                        <p className="text-gray-700 dark:text-gray-200 font-medium group-hover:text-black dark:group-hover:text-white text-sm flex items-center gap-1">
                           <span className="line-clamp-2">{resource.title || 'Resource'}</span>
                           <ExternalLink className="w-3 h-3 opacity-50 flex-shrink-0" />
                         </p>
                         {resource.creator && (
-                          <p className="text-xs text-calm-500">{resource.creator}</p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">{resource.creator}</p>
                         )}
                       </div>
                     </a>
@@ -507,22 +441,14 @@ export default function DashboardPage() {
 
           {/* Quick tip */}
           {todayTask && (
-            <div className="calm-card bg-gradient-to-br from-sky-50 to-sage-50 border-0">
-              <p className="text-sm text-calm-600 text-center">
+            <div className="calm-card bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 border-0">
+              <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
                 Focus on understanding, not speed. You're building lasting knowledge.
               </p>
             </div>
           )}
         </div>
       </div>
-
-      {/* User Profile Modal */}
-      {selectedUserId && (
-        <UserProfileModal
-          userId={selectedUserId}
-          onClose={() => setSelectedUserId(null)}
-        />
-      )}
     </motion.div>
   )
 }

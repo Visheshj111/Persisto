@@ -14,35 +14,62 @@ html {
 
 body {
   font-family: 'Inter', system-ui, sans-serif;
-  background: linear-gradient(135deg, #f8fafc 0%, #f0f9ff 50%, #f6f7f6 100%);
+  background: #ffffff;
   min-height: 100vh;
-  color: #334155;
+  color: #171717;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Dark mode */
+.dark body,
+html.dark body {
+  background: #0a0a0a;
+  color: #fafafa;
+}
+
+.dark {
+  color-scheme: dark;
+}
+
 /* Calm scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: #f5f5f5;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: #262626;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 4px;
+  background: #d4d4d4;
+  border-radius: 3px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #525252;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #a3a3a3;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #737373;
 }
 
 /* Focus styles for accessibility */
 *:focus-visible {
-  outline: 2px solid #7dd3fc;
+  outline: 2px solid #171717;
   outline-offset: 2px;
+}
+
+.dark *:focus-visible {
+  outline: 2px solid #fafafa;
 }
 
 /* Smooth transitions */
@@ -73,26 +100,42 @@ button, a, input, textarea {
 /* Calm card styles */
 @layer components {
   .calm-card {
-    @apply bg-white/80 backdrop-blur-sm rounded-2xl shadow-sm border border-calm-100 p-6;
+    @apply bg-white rounded-2xl shadow-sm border border-calm-200 p-6;
+  }
+  
+  .dark .calm-card {
+    @apply bg-calm-900 border-calm-800;
   }
   
   .calm-button {
     @apply px-6 py-3 rounded-xl font-medium transition-all duration-200 
-           focus:outline-none focus:ring-2 focus:ring-sky-300 focus:ring-offset-2;
+           focus:outline-none focus:ring-2 focus:ring-calm-400 focus:ring-offset-2;
   }
   
   .calm-button-primary {
-    @apply calm-button bg-gradient-to-r from-sky-400 to-sage-400 text-white 
-           hover:from-sky-500 hover:to-sage-500 shadow-md hover:shadow-lg;
+    @apply calm-button bg-calm-900 text-white hover:bg-calm-800 shadow-md hover:shadow-lg;
+  }
+  
+  .dark .calm-button-primary {
+    @apply bg-white text-calm-900 hover:bg-calm-100;
   }
   
   .calm-button-secondary {
     @apply calm-button bg-calm-100 text-calm-700 hover:bg-calm-200;
   }
   
+  .dark .calm-button-secondary {
+    @apply bg-calm-800 text-calm-200 hover:bg-calm-700;
+  }
+  
   .calm-input {
-    @apply w-full px-4 py-3 rounded-xl border border-calm-200 bg-white/50
-           focus:border-sky-300 focus:ring-2 focus:ring-sky-100 
+    @apply w-full px-4 py-3 rounded-xl border border-calm-200 bg-white
+           focus:border-calm-400 focus:ring-2 focus:ring-calm-100 
            placeholder:text-calm-400 transition-all duration-200;
+  }
+  
+  .dark .calm-input {
+    @apply bg-calm-900 border-calm-700 text-white placeholder:text-calm-500
+           focus:border-calm-500 focus:ring-calm-800;
   }
 }

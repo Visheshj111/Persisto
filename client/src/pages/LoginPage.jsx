@@ -2,7 +2,7 @@ import { GoogleLogin } from '@react-oauth/google'
 import { useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../store/authStore'
 import { motion } from 'framer-motion'
-import { Leaf, Wind, Sun, Moon } from 'lucide-react'
+import { Zap, Target, Clock, Sparkles } from 'lucide-react'
 
 export default function LoginPage() {
   const { login } = useAuthStore()
@@ -31,23 +31,23 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-white dark:bg-black">
       {/* Background decorative elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <motion.div
           animate={{ y: [0, -20, 0], x: [0, 10, 0] }}
           transition={{ duration: 8, repeat: Infinity }}
-          className="absolute top-20 left-10 w-32 h-32 rounded-full bg-sky-200/30"
+          className="absolute top-20 left-10 w-32 h-32 rounded-full bg-gray-200/30 dark:bg-gray-800/30"
         />
         <motion.div
           animate={{ y: [0, 20, 0], x: [0, -10, 0] }}
           transition={{ duration: 10, repeat: Infinity }}
-          className="absolute bottom-20 right-10 w-48 h-48 rounded-full bg-sage-200/30"
+          className="absolute bottom-20 right-10 w-48 h-48 rounded-full bg-gray-300/30 dark:bg-gray-700/30"
         />
         <motion.div
           animate={{ y: [0, 15, 0] }}
           transition={{ duration: 6, repeat: Infinity }}
-          className="absolute top-40 right-20 w-24 h-24 rounded-full bg-warmth-200/20"
+          className="absolute top-40 right-20 w-24 h-24 rounded-full bg-gray-100/40 dark:bg-gray-900/40"
         />
       </div>
 
@@ -63,42 +63,42 @@ export default function LoginPage() {
           <motion.div
             animate={{ scale: [1, 1.05, 1] }}
             transition={{ duration: 4, repeat: Infinity }}
-            className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-sky-400 to-sage-400 mb-6 shadow-lg"
+            className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-black dark:bg-white mb-6 shadow-lg"
           >
-            <Leaf className="w-10 h-10 text-white" />
+            <Zap className="w-10 h-10 text-white dark:text-black" />
           </motion.div>
-          <h1 className="text-4xl font-bold text-calm-800 mb-2">Flow Goals</h1>
-          <p className="text-calm-500 text-lg">Achieve with calm consistency</p>
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">Persisto</h1>
+          <p className="text-gray-500 dark:text-gray-400 text-lg">Build skills with consistency</p>
         </div>
 
         {/* Card */}
         <div className="calm-card text-center">
-          <h2 className="text-xl font-semibold text-calm-700 mb-2">
-            Welcome to your flow state
+          <h2 className="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-2">
+            Welcome to Persisto
           </h2>
-          <p className="text-calm-500 mb-8">
+          <p className="text-gray-500 dark:text-gray-400 mb-8">
             One day at a time. No rush. No pressure.
           </p>
 
           {/* Features */}
           <div className="grid grid-cols-3 gap-4 mb-8">
             <div className="text-center">
-              <div className="w-10 h-10 rounded-full bg-sky-100 flex items-center justify-center mx-auto mb-2">
-                <Sun className="w-5 h-5 text-sky-500" />
+              <div className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center mx-auto mb-2">
+                <Target className="w-5 h-5 text-gray-600 dark:text-gray-400" />
               </div>
-              <p className="text-xs text-calm-500">Daily focus</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Daily focus</p>
             </div>
             <div className="text-center">
-              <div className="w-10 h-10 rounded-full bg-sage-100 flex items-center justify-center mx-auto mb-2">
-                <Wind className="w-5 h-5 text-sage-500" />
+              <div className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center mx-auto mb-2">
+                <Clock className="w-5 h-5 text-gray-600 dark:text-gray-400" />
               </div>
-              <p className="text-xs text-calm-500">Gentle pace</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Gentle pace</p>
             </div>
             <div className="text-center">
-              <div className="w-10 h-10 rounded-full bg-warmth-100 flex items-center justify-center mx-auto mb-2">
-                <Moon className="w-5 h-5 text-warmth-500" />
+              <div className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center mx-auto mb-2">
+                <Sparkles className="w-5 h-5 text-gray-600 dark:text-gray-400" />
               </div>
-              <p className="text-xs text-calm-500">No guilt</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">No guilt</p>
             </div>
           </div>
 
@@ -114,7 +114,7 @@ export default function LoginPage() {
             />
           </div>
 
-          <p className="text-xs text-calm-400 mt-6">
+          <p className="text-xs text-gray-400 dark:text-gray-500 mt-6">
             By continuing, you agree to our Terms of Service and Privacy Policy
           </p>
         </div>
@@ -124,7 +124,7 @@ export default function LoginPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="text-center text-calm-400 text-sm mt-8 italic"
+          className="text-center text-gray-400 dark:text-gray-500 text-sm mt-8 italic"
         >
           "The journey of a thousand miles begins with a single step."
         </motion.p>

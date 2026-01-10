@@ -1,13 +1,29 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Outlet, NavLink, useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../store/authStore'
-import { Home, Users, Settings, LogOut, Leaf, Map, BookOpen } from 'lucide-react'
+import { Home, Users, Settings, LogOut, Map, BookOpen, Moon, Sun, Zap } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 export default function Layout() {
   const { user, logout } = useAuthStore()
   const navigate = useNavigate()
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
+  const [darkMode, setDarkMode] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('darkMode') === 'true' || 
+             window.matchMedia('(prefers-color-scheme: dark)').matches
+    }
+    return false
+  })
+
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add('dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+    }
+    localStorage.setItem('darkMode', darkMode)
+  }, [darkMode])
 
   const handleLogout = () => {
     setShowLogoutConfirm(true)
@@ -27,22 +43,27 @@ export default function Layout() {
   ]
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-white dark:bg-calm-950 transition-colors">
       {/* Header */}
-      <header className="bg-white/60 backdrop-blur-md border-b border-calm-100 sticky top-0 z-50">
-        <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <motion.div
-              animate={{ scale: [1, 1.05, 1] }}
-              transition={{ duration: 4, repeat: Infinity }}
-              className="w-10 h-10 rounded-full bg-gradient-to-r from-sky-400 to-sage-400 flex items-center justify-center"
-            >
-              <Leaf className="w-5 h-5 text-white" />
-            </motion.div>
-            <h1 className="text-xl font-semibold text-calm-800">Flow Goals</h1>
+      <header className="bg-white dark:bg-calm-900 border-b border-calm-200 dark:border-calm-800 sticky top-0 z-50">
+        <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-calm-900 dark:bg-white flex items-center justify-center">
+              <Zap className="w-4 h-4 text-white dark:text-calm-900" />
+            </div>
+            <h1 className="text-lg font-bold text-calm-900 dark:text-white">Persisto</h1>
           </div>
           
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            {/* Dark mode toggle */}
+            <button 
+              onClick={() => setDarkMode(!darkMode)}
+              className="p-2 text-calm-500 hover:text-calm-700 dark:text-calm-400 dark:hover:text-calm-200 transition-colors"
+              aria-label="Toggle dark mode"
+            >
+              {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+            </button>
+            
             <div className="flex items-center gap-2">
               {user?.picture && (
                 <img 
@@ -51,11 +72,11 @@ export default function Layout() {
                   className="w-8 h-8 rounded-full"
                 />
               )}
-              <span className="text-sm text-calm-600 hidden sm:inline">{user?.name}</span>
+              <span className="text-sm text-calm-600 dark:text-calm-300 hidden sm:inline">{user?.name}</span>
             </div>
             <button 
               onClick={handleLogout}
-              className="p-2 text-calm-400 hover:text-calm-600 transition-colors"
+              className="p-2 text-calm-400 hover:text-calm-600 dark:hover:text-calm-200 transition-colors"
               aria-label="Logout"
             >
               <LogOut className="w-5 h-5" />
@@ -65,29 +86,29 @@ export default function Layout() {
       </header>
 
       {/* Navigation */}
-      <nav className="bg-white/40 border-b border-calm-100">
-        <div className="max-w-4xl mx-auto px-4">
+      <nav className="bg-white dark:bg-calm-900 border-b border-calm-200 dark:border-calm-800 overflow-x-auto">
+        <div className="max-w-6xl mx-auto px-4">
           <div className="flex gap-1">
             {navItems.map(({ to, icon: Icon, label }) => (
               <NavLink
                 key={to}
                 to={to}
                 className={({ isActive }) =>
-                  `flex items-center gap-2 px-4 py-3 text-sm font-medium transition-colors relative ${
+                  `flex items-center gap-2 px-3 py-3 text-sm font-medium transition-colors relative whitespace-nowrap ${
                     isActive 
-                      ? 'text-sky-600' 
-                      : 'text-calm-500 hover:text-calm-700'
+                      ? 'text-calm-900 dark:text-white' 
+                      : 'text-calm-500 hover:text-calm-700 dark:text-calm-400 dark:hover:text-calm-200'
                   }`
                 }
               >
                 {({ isActive }) => (
                   <>
                     <Icon className="w-4 h-4" />
-                    {label}
+                    <span className="hidden sm:inline">{label}</span>
                     {isActive && (
                       <motion.div
                         layoutId="activeTab"
-                        className="absolute bottom-0 left-0 right-0 h-0.5 bg-sky-400"
+                        className="absolute bottom-0 left-0 right-0 h-0.5 bg-calm-900 dark:bg-white"
                       />
                     )}
                   </>
@@ -104,7 +125,7 @@ export default function Layout() {
       </main>
 
       {/* Footer */}
-      <footer className="py-8 text-center text-calm-400 text-sm">
+      <footer className="py-8 text-center text-calm-400 dark:text-calm-600 text-sm">
         <p>Take it one day at a time. You're doing great.</p>
       </footer>
 
@@ -115,28 +136,28 @@ export default function Layout() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
             onClick={() => setShowLogoutConfirm(false)}
           >
             <motion.div
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
-              className="bg-white rounded-2xl shadow-xl max-w-sm w-full p-6"
+              className="bg-white dark:bg-calm-900 rounded-2xl shadow-xl max-w-sm w-full p-6"
               onClick={e => e.stopPropagation()}
             >
-              <h3 className="text-lg font-semibold text-calm-800 mb-2">Log out?</h3>
-              <p className="text-calm-500 mb-6">Are you sure you want to log out?</p>
+              <h3 className="text-lg font-semibold text-calm-900 dark:text-white mb-2">Log out?</h3>
+              <p className="text-calm-500 dark:text-calm-400 mb-6">Are you sure you want to log out?</p>
               <div className="flex gap-3">
                 <button
                   onClick={() => setShowLogoutConfirm(false)}
-                  className="flex-1 px-4 py-2 bg-calm-100 text-calm-700 rounded-xl hover:bg-calm-200 transition-colors"
+                  className="flex-1 px-4 py-2 bg-calm-100 dark:bg-calm-800 text-calm-700 dark:text-calm-200 rounded-xl hover:bg-calm-200 dark:hover:bg-calm-700 transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={confirmLogout}
-                  className="flex-1 px-4 py-2 bg-red-100 text-red-600 rounded-xl hover:bg-red-200 transition-colors"
+                  className="flex-1 px-4 py-2 bg-calm-900 dark:bg-white text-white dark:text-calm-900 rounded-xl hover:bg-calm-800 dark:hover:bg-calm-100 transition-colors"
                 >
                   Log out
                 </button>
