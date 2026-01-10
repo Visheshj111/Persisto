@@ -31,18 +31,7 @@ app.use(express.json());
 
 // Root route
 app.get('/', (req, res) => {
-  res.json({ 
-    message: 'Flow Goals API',
-    status: 'running',
-    endpoints: {
-      health: '/api/health',
-      auth: '/api/auth',
-      goals: '/api/goals',
-      tasks: '/api/tasks',
-      activity: '/api/activity',
-      users: '/api/users'
-    }
-  });
+  res.json({ message: 'Backend is working' });
 });
 
 // Routes
