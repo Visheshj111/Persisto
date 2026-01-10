@@ -24,6 +24,7 @@ import { sendDailyReminders } from './services/reminderService.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const HOST = '0.0.0.0';
 
 // Middleware
 app.use(cors({
@@ -59,8 +60,8 @@ cron.schedule('0 21 * * *', () => {
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/flow-goals')
   .then(() => {
     console.log('Connected to MongoDB');
-    app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
+    app.listen(PORT, HOST, () => {
+      console.log(`Server running on http://${HOST}:${PORT}`);
     });
   })
   .catch((error) => {
