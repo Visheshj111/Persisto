@@ -200,43 +200,45 @@ export default function DashboardPage() {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="space-y-6"
+      className="flex gap-6"
     >
-      {/* Greeting */}
-      <div className="flex items-center gap-3 text-calm-600">
-        <GreetingIcon className="w-5 h-5" />
-        <span>{greeting.text}</span>
-        <span className="text-calm-300">•</span>
-        <span className="text-calm-400">{format(new Date(), 'EEEE, MMMM d')}</span>
-      </div>
-
-      {/* Goal Progress */}
-      {activeGoal && (
-        <div className="calm-card">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <p className="text-sm text-calm-500">Your journey</p>
-              <h3 className="font-semibold text-calm-800">{activeGoal.title}</h3>
-            </div>
-            <div className="text-right">
-              <p className="text-2xl font-bold text-sky-500">{activeGoal.progress || 0}%</p>
-              <p className="text-xs text-calm-400">
-                Day {activeGoal.completedDays + 1} of {activeGoal.totalDays}
-              </p>
-            </div>
-          </div>
-          
-          {/* Progress bar */}
-          <div className="h-2 bg-calm-100 rounded-full overflow-hidden">
-            <motion.div
-              initial={{ width: 0 }}
-              animate={{ width: `${activeGoal.progress || 0}%` }}
-              transition={{ duration: 0.8, ease: 'easeOut' }}
-              className="h-full bg-gradient-to-r from-sky-400 to-sage-400 rounded-full"
-            />
-          </div>
+      {/* Main Content - Left Column */}
+      <div className="flex-1 space-y-6 min-w-0">
+        {/* Greeting */}
+        <div className="flex items-center gap-3 text-calm-600">
+          <GreetingIcon className="w-5 h-5" />
+          <span>{greeting.text}</span>
+          <span className="text-calm-300">•</span>
+          <span className="text-calm-400">{format(new Date(), 'EEEE, MMMM d')}</span>
         </div>
-      )}
+
+        {/* Goal Progress */}
+        {activeGoal && (
+          <div className="calm-card">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <p className="text-sm text-calm-500">Your journey</p>
+                <h3 className="font-semibold text-calm-800">{activeGoal.title}</h3>
+              </div>
+              <div className="text-right">
+                <p className="text-2xl font-bold text-sky-500">{activeGoal.progress || 0}%</p>
+                <p className="text-xs text-calm-400">
+                  Day {activeGoal.completedDays + 1} of {activeGoal.totalDays}
+                </p>
+              </div>
+            </div>
+            
+            {/* Progress bar */}
+            <div className="h-2 bg-calm-100 rounded-full overflow-hidden">
+              <motion.div
+                initial={{ width: 0 }}
+                animate={{ width: `${activeGoal.progress || 0}%` }}
+                transition={{ duration: 0.8, ease: 'easeOut' }}
+                className="h-full bg-gradient-to-r from-sky-400 to-sage-400 rounded-full"
+              />
+            </div>
+          </div>
+        )}
 
       {/* Today's Task */}
       {todayTask && (
@@ -302,63 +304,6 @@ export default function DashboardPage() {
                         <span className="text-calm-700">{item}</span>
                       </div>
                     ))}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          )}
-
-          {/* Resources Section */}
-          {todayTask.resources && todayTask.resources.length > 0 && (
-            <div className="mb-6">
-              <button
-                onClick={() => setShowResources(!showResources)}
-                className="flex items-center gap-2 text-sm font-semibold text-calm-700 mb-3 hover:text-calm-800"
-              >
-                <BookOpen className="w-4 h-4 text-sage-500" />
-                Learn from
-                {showResources ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-              </button>
-              
-              <AnimatePresence>
-                {showResources && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    className="bg-sage-50/50 rounded-xl p-4 space-y-3"
-                  >
-                    {todayTask.resources.map((resource, index) => {
-                      const IconComponent = getResourceIcon(resource.type)
-                      return (
-                        <a
-                          key={index}
-                          href={resource.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-start gap-3 p-2 rounded-lg hover:bg-sage-100/50 transition-colors group"
-                        >
-                          <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                            resource.type === 'video' ? 'bg-red-100 text-red-500' :
-                            resource.type === 'docs' ? 'bg-blue-100 text-blue-500' :
-                            'bg-sage-100 text-sage-500'
-                          }`}>
-                            <IconComponent className="w-4 h-4" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-calm-700 font-medium group-hover:text-sky-600 flex items-center gap-1">
-                              {resource.type === 'docs' ? 'Docs: ' : resource.type === 'video' ? 'Video: ' : ''}
-                              <span className="truncate">{resource.title || resource.url}</span>
-                              <ExternalLink className="w-3 h-3 opacity-50" />
-                            </p>
-                            {resource.creator && (
-                              <p className="text-xs text-calm-500">({resource.creator})</p>
-                            )}
-                            <p className="text-xs text-sky-500 truncate">{resource.url}</p>
-                          </div>
-                        </a>
-                      )
-                    })}
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -509,6 +454,67 @@ export default function DashboardPage() {
           </div>
         </motion.div>
       )}
+      </div>
+
+      {/* Right Sidebar - Resources */}
+      <div className="hidden lg:block w-80 flex-shrink-0">
+        <div className="sticky top-24 space-y-4">
+          {/* Learn From Resources */}
+          {todayTask?.resources && todayTask.resources.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.2 }}
+              className="calm-card"
+            >
+              <h3 className="font-semibold text-calm-700 mb-4 flex items-center gap-2">
+                <BookOpen className="w-5 h-5 text-sage-500" />
+                Learn from
+              </h3>
+              <div className="space-y-3">
+                {todayTask.resources.map((resource, index) => {
+                  const IconComponent = getResourceIcon(resource.type)
+                  return (
+                    <a
+                      key={index}
+                      href={resource.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-start gap-3 p-3 rounded-xl bg-calm-50 hover:bg-calm-100 transition-colors group"
+                    >
+                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${
+                        resource.type === 'video' ? 'bg-red-100 text-red-500' :
+                        resource.type === 'docs' ? 'bg-blue-100 text-blue-500' :
+                        'bg-sage-100 text-sage-500'
+                      }`}>
+                        <IconComponent className="w-5 h-5" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-calm-700 font-medium group-hover:text-sky-600 text-sm flex items-center gap-1">
+                          <span className="line-clamp-2">{resource.title || 'Resource'}</span>
+                          <ExternalLink className="w-3 h-3 opacity-50 flex-shrink-0" />
+                        </p>
+                        {resource.creator && (
+                          <p className="text-xs text-calm-500">{resource.creator}</p>
+                        )}
+                      </div>
+                    </a>
+                  )
+                })}
+              </div>
+            </motion.div>
+          )}
+
+          {/* Quick tip */}
+          {todayTask && (
+            <div className="calm-card bg-gradient-to-br from-sky-50 to-sage-50 border-0">
+              <p className="text-sm text-calm-600 text-center">
+                Focus on understanding, not speed. You're building lasting knowledge.
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
 
       {/* User Profile Modal */}
       {selectedUserId && (
