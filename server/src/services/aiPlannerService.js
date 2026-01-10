@@ -298,6 +298,9 @@ function generateFallbackPlan(goal) {
     const currentPhase = phases.find(p => i >= p.startDay && i <= p.endDay);
     const topic = skillTopics[i - 1] || `${title} - Session ${i}`;
     
+    // Generate learning resources for this topic
+    const resources = generateResources(topic, title);
+    
     tasks.push({
       dayNumber: i,
       title: topic,
@@ -305,7 +308,7 @@ function generateFallbackPlan(goal) {
       estimatedMinutes: dailyMinutes,
       phase: currentPhase?.name || 'Phase 1: Foundation',
       deliverables: [`Complete study session on ${topic}`],
-      resources: [],
+      resources,
       actionItems: [`Study ${topic} (${dailyMinutes} min)`],
       skillProgression: `Outcome: Completed ${topic}`,
       nodeType: i === 1 ? 'up' : (i % 2 === 0 ? 'up' : 'down')

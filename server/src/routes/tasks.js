@@ -6,6 +6,107 @@ import Activity from '../models/Activity.js';
 
 const router = express.Router();
 
+// Helper function to generate resources on-the-fly for existing tasks
+function generateResourcesForTask(topic, skillName) {
+  const resources = [];
+  const skillLower = (skillName || '').toLowerCase();
+  
+  // YouTube - Always helpful
+  resources.push({
+    type: 'video',
+    title: `${topic} - Tutorial`,
+    url: `https://www.youtube.com/results?search_query=${encodeURIComponent(skillName + ' ' + topic + ' tutorial beginner')}`,
+    creator: 'YouTube'
+  });
+  
+  // Add skill-specific resources
+  if (skillLower.includes('python')) {
+    resources.push({
+      type: 'tutorial',
+      title: 'Interactive Python Tutorial',
+      url: 'https://www.freecodecamp.org/learn/scientific-computing-with-python/',
+      creator: 'freeCodeCamp'
+    });
+    resources.push({
+      type: 'docs',
+      title: 'Python Documentation',
+      url: 'https://docs.python.org/3/',
+      creator: 'Python.org'
+    });
+  } else if (skillLower.includes('javascript') || skillLower.includes('js')) {
+    resources.push({
+      type: 'tutorial',
+      title: 'JavaScript Algorithms and Data Structures',
+      url: 'https://www.freecodecamp.org/learn/javascript-algorithms-and-data-structures/',
+      creator: 'freeCodeCamp'
+    });
+    resources.push({
+      type: 'docs',
+      title: 'MDN JavaScript Docs',
+      url: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript',
+      creator: 'MDN'
+    });
+  } else if (skillLower.includes('react')) {
+    resources.push({
+      type: 'tutorial',
+      title: 'React Tutorial',
+      url: 'https://react.dev/learn',
+      creator: 'React'
+    });
+    resources.push({
+      type: 'docs',
+      title: 'React Documentation',
+      url: 'https://react.dev/',
+      creator: 'React'
+    });
+  } else if (skillLower.includes('guitar') || skillLower.includes('piano') || skillLower.includes('singing') || skillLower.includes('music')) {
+    resources.push({
+      type: 'tutorial',
+      title: 'Music Theory Lessons',
+      url: 'https://www.musictheory.net/lessons',
+      creator: 'MusicTheory.net'
+    });
+  } else if (skillLower.includes('excel')) {
+    resources.push({
+      type: 'tutorial',
+      title: 'Excel Training',
+      url: 'https://support.microsoft.com/en-us/excel',
+      creator: 'Microsoft'
+    });
+  } else if (skillLower.includes('powerbi') || skillLower.includes('power bi')) {
+    resources.push({
+      type: 'tutorial',
+      title: 'Power BI Learning Path',
+      url: 'https://learn.microsoft.com/en-us/power-bi/',
+      creator: 'Microsoft Learn'
+    });
+  } else if (skillLower.includes('photoshop') || skillLower.includes('design')) {
+    resources.push({
+      type: 'tutorial',
+      title: 'Adobe Tutorials',
+      url: 'https://helpx.adobe.com/photoshop/tutorials.html',
+      creator: 'Adobe'
+    });
+  } else if (skillLower.includes('cooking') || skillLower.includes('cook')) {
+    resources.push({
+      type: 'article',
+      title: 'Cooking Basics',
+      url: 'https://www.allrecipes.com/recipes/17562/everyday-cooking/quick-and-easy/',
+      creator: 'AllRecipes'
+    });
+  } else {
+    // Generic resources for any skill
+    resources.push({
+      type: 'tutorial',
+      title: `Learn ${topic}`,
+      url: `https://www.google.com/search?q=${encodeURIComponent(skillName + ' ' + topic + ' free course tutorial')}`,
+      creator: 'Web Search'
+    });
+  }
+  
+  return resources;
+}
+
 // Get all tasks for a goal (for roadmap view)
 router.get('/all/:goalId', authenticateToken, async (req, res) => {
   try {
@@ -39,7 +140,7 @@ router.get('/today', authenticateToken, async (req, res) => {
     }
 
     // Find the next pending task (the current day's task)
-    const task = await Task.findOne({
+    let task = await Task.findOne({
       userId: req.user._id,
       goalId: goal._id,
       status: 'pending'
@@ -54,6 +155,14 @@ router.get('/today', authenticateToken, async (req, res) => {
       });
     }
 
+    // Convert to plain object so we can modify it
+    task = task.toObject();
+    
+    // Generate resources on-the-fly if task doesn't have them
+    if (!task.resources || task.resources.length === 0) {
+      task.resources = generateResourcesForTask(task.title, goal.title);
+    }
+
     // Calculate progress
     const totalTasks = await Task.countDocuments({ goalId: goal._id });
     const completedTasks = await Task.countDocuments({ 
@@ -61,6 +170,9 @@ router.get('/today', authenticateToken, async (req, res) => {
       status: 'completed' 
     });
     const progress = Math.round((completedTasks / totalTasks) * 100);
+
+    // Also add topic field for easy access
+    task.topic = task.title;
 
     res.json({
       task,
