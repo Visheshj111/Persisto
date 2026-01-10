@@ -399,18 +399,31 @@ export default function DashboardPage() {
 
           {/* Action Buttons */}
           <div className="flex gap-3">
-            <button
-              onClick={handleComplete}
-              disabled={completing || skipping}
-              className="flex-1 calm-button bg-gradient-to-r from-sage-400 to-sage-500 text-white hover:from-sage-500 hover:to-sage-600 flex items-center justify-center gap-2 disabled:opacity-50"
-            >
-              {completing ? (
-                <Loader2 className="w-5 h-5 animate-spin" />
-              ) : (
-                <CheckCircle2 className="w-5 h-5" />
-              )}
-              Completed
-            </button>
+            {(() => {
+              const allItemsCompleted = !todayTask.actionItems || 
+                todayTask.actionItems.length === 0 || 
+                todayTask.actionItems.every(item => item.completed)
+              
+              return (
+                <button
+                  onClick={handleComplete}
+                  disabled={completing || skipping || !allItemsCompleted}
+                  className={`flex-1 calm-button flex items-center justify-center gap-2 disabled:opacity-50 ${
+                    allItemsCompleted 
+                      ? 'bg-gradient-to-r from-sage-400 to-sage-500 text-white hover:from-sage-500 hover:to-sage-600' 
+                      : 'bg-calm-200 text-calm-400 cursor-not-allowed'
+                  }`}
+                  title={!allItemsCompleted ? 'Complete all action items first' : ''}
+                >
+                  {completing ? (
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                  ) : (
+                    <CheckCircle2 className="w-5 h-5" />
+                  )}
+                  {allItemsCompleted ? 'Completed' : 'Check all items'}
+                </button>
+              )
+            })()}
             <button
               onClick={handleSkip}
               disabled={completing || skipping}
