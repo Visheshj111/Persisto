@@ -276,37 +276,82 @@ function calculatePhases(totalDays) {
 }
 
 function generateFallbackPlan(goal) {
-  const { title, totalDays, dailyMinutes } = goal;
+  const { title, totalDays, dailyMinutes, type } = goal;
   const tasks = [];
   const phases = calculatePhases(totalDays);
   
+  // Smart topic generation based on skill keywords
+  const skillTopics = getSkillTopics(title.toLowerCase(), totalDays);
+  
   for (let i = 1; i <= totalDays; i++) {
     const currentPhase = phases.find(p => i >= p.startDay && i <= p.endDay);
-    const phaseDay = i - (currentPhase?.startDay || 1) + 1;
+    const topic = skillTopics[i - 1] || `${title} - Session ${i}`;
     
     tasks.push({
       dayNumber: i,
-      title: `${title} - ${currentPhase?.name || 'Foundation'} Session ${phaseDay}`,
-      purpose: `${currentPhase?.focus || 'Technical foundation'}. Required for tasks in subsequent sessions.`,
+      title: topic,
+      purpose: `Focus on ${topic}`,
       estimatedMinutes: dailyMinutes,
       phase: currentPhase?.name || 'Phase 1: Foundation',
-      deliverables: [
-        `Completed exercises for session ${phaseDay}`,
-        `Notes document for ${currentPhase?.name || 'this phase'}`,
-        `Practice project files`
-      ],
+      deliverables: [`Complete study session on ${topic}`],
       resources: [],
-      actionItems: [
-        `Study core material for ${title} session ${phaseDay} (${Math.floor(dailyMinutes * 0.4)} min)`,
-        `Complete ${phaseDay * 3} practice exercises (${Math.floor(dailyMinutes * 0.4)} min)`,
-        `Create notes.md documenting key points from session ${phaseDay} (${Math.floor(dailyMinutes * 0.2)} min)`
-      ],
-      skillProgression: `Outcome: Completed session ${i} tasks for ${title}`,
+      actionItems: [`Study ${topic} (${dailyMinutes} min)`],
+      skillProgression: `Outcome: Completed ${topic}`,
       nodeType: i === 1 ? 'up' : (i % 2 === 0 ? 'up' : 'down')
     });
   }
   
   return tasks;
+}
+
+// Generate skill-specific topics based on keywords
+function getSkillTopics(skillName, totalDays) {
+  const topicLibrary = {
+    // Programming
+    'python': ['Variables and Data Types', 'Conditionals and If Statements', 'Loops (For and While)', 'Functions and Parameters', 'Lists and Arrays', 'Dictionaries and Sets', 'String Manipulation', 'File I/O Operations', 'Error Handling and Exceptions', 'Object-Oriented Programming Basics', 'Classes and Objects', 'Inheritance and Polymorphism', 'Modules and Packages', 'List Comprehensions', 'Lambda Functions', 'Decorators', 'Generators', 'Working with APIs', 'Data Analysis with Pandas', 'Building a Complete Project'],
+    'javascript': ['Variables (let, const, var)', 'Data Types and Operators', 'Conditionals and Comparison', 'Loops (for, while, forEach)', 'Functions and Arrow Functions', 'Arrays and Array Methods', 'Objects and Object Methods', 'DOM Manipulation Basics', 'Event Listeners and Handling', 'ES6 Features', 'Promises and Async/Await', 'Fetch API and AJAX', 'Local Storage', 'Array Destructuring', 'Spread and Rest Operators', 'Modules (Import/Export)', 'Error Handling', 'Working with JSON', 'Building a Web App', 'Final Project'],
+    'react': ['JSX and Components', 'Props and State', 'Event Handling', 'Conditional Rendering', 'Lists and Keys', 'Forms and Controlled Components', 'Lifecycle Methods', 'Hooks - useState', 'Hooks - useEffect', 'Hooks - useContext', 'Custom Hooks', 'React Router Basics', 'Navigation and Links', 'API Integration', 'State Management', 'Component Composition', 'Performance Optimization', 'Testing React Components', 'Deployment', 'Full Stack Project'],
+    
+    // Music
+    'singing': ['Breathing Techniques and Posture', 'Vocal Warmups and Scales', 'Pitch Control and Ear Training', 'Tone Quality and Resonance', 'Basic Melodies and Simple Songs', 'Vocal Range Expansion', 'Articulation and Diction', 'Rhythm and Timing', 'Dynamics (Soft and Loud)', 'Vibrato Technique', 'Song Interpretation', 'Learning Your First Full Song', 'Performance Techniques', 'Microphone Technique', 'Harmony and Backing Vocals', 'Genre-Specific Techniques', 'Recording Basics', 'Stage Presence', 'Repertoire Building', 'Live Performance Practice'],
+    'guitar': ['Parts of Guitar and Tuning', 'Basic Chords (G, C, D)', 'Chord Changes and Transitions', 'Strumming Patterns', 'Basic Fingerpicking', 'Reading Chord Charts', 'Power Chords', 'Barre Chords Basics', 'Minor Chords', 'Rhythm Patterns', 'Basic Scales', 'Learning Your First Song', 'Fingerstyle Techniques', 'Hammer-ons and Pull-offs', 'Slides and Bends', 'Palm Muting', 'Music Theory Basics', 'Improvisation', 'Song Writing Basics', 'Performance Practice'],
+    'piano': ['Piano Keys and Posture', 'Right Hand Position and C Major Scale', 'Left Hand Bass Notes', 'Both Hands Together', 'Reading Sheet Music Basics', 'Basic Chords (C, F, G)', 'Chord Progressions', 'Rhythm and Timing', 'Dynamics and Expression', 'Pedal Technique', 'Minor Scales', 'Arpeggios', 'Hand Independence', 'Sight Reading', 'Your First Song', 'Music Theory Fundamentals', 'Advanced Chords', 'Improvisation', 'Performance Techniques', 'Recital Preparation'],
+    
+    // Design
+    'photoshop': ['Interface and Workspace', 'Selection Tools', 'Layers and Layer Masks', 'Basic Adjustments', 'Brushes and Painting', 'Text and Typography', 'Color Correction', 'Retouching Techniques', 'Filters and Effects', 'Pen Tool Mastery', 'Compositing Basics', 'Smart Objects', 'Adjustment Layers', 'Blending Modes', 'Photo Manipulation', 'Creating Graphics', 'Working with RAW', 'Exporting for Web', 'Advanced Techniques', 'Portfolio Project'],
+    'drawing': ['Basic Shapes and Lines', 'Shading Techniques', 'Perspective Basics', 'Proportions and Anatomy', 'Light and Shadow', 'Textures', 'Facial Features', 'Eyes and Expression', 'Hands and Feet', 'Full Body Proportions', 'Dynamic Poses', 'Clothing and Folds', 'Hair Rendering', 'Backgrounds', 'Composition', 'Color Theory', 'Digital vs Traditional', 'Character Design', 'Style Development', 'Final Artwork'],
+    
+    // Fitness
+    'gym': ['Gym Equipment Tour', 'Proper Form Basics', 'Chest Exercises', 'Back Exercises', 'Shoulder Exercises', 'Arm Exercises', 'Leg Exercises', 'Core Strengthening', 'Compound Movements', 'Progressive Overload', 'Workout Split Basics', 'Cardio Integration', 'Rest and Recovery', 'Nutrition Basics', 'Tracking Progress', 'Advanced Techniques', 'Injury Prevention', 'Flexibility Work', 'Goal Setting', 'Custom Workout Plan'],
+    'yoga': ['Basic Breathing (Pranayama)', 'Mountain Pose and Alignment', 'Sun Salutation A', 'Standing Poses', 'Balancing Poses', 'Forward Folds', 'Backbends', 'Twists', 'Hip Openers', 'Seated Poses', 'Inversions Basics', 'Core Strengthening', 'Arm Balances', 'Restorative Poses', 'Meditation Basics', 'Flexibility Flow', 'Strength Building', 'Mind-Body Connection', 'Full Practice Sequence', 'Personal Practice Development'],
+    
+    // Business & Tech
+    'powerbi': ['Power BI Interface and Setup', 'Importing Data Sources', 'Data Transformation Basics', 'Creating Your First Visual', 'Table and Matrix Visuals', 'Chart Types and Usage', 'Filters and Slicers', 'DAX Basics', 'Calculated Columns', 'Measures and KPIs', 'Relationships Between Tables', 'Data Modeling', 'Time Intelligence', 'Advanced DAX Functions', 'Dashboard Design Principles', 'Interactive Reports', 'Publishing and Sharing', 'Row Level Security', 'Performance Optimization', 'Complete Dashboard Project'],
+    'excel': ['Interface and Basic Formulas', 'Cell References', 'SUM, AVERAGE, COUNT', 'IF Statements', 'VLOOKUP and HLOOKUP', 'Data Sorting and Filtering', 'Conditional Formatting', 'Charts and Graphs', 'Pivot Tables Basics', 'Advanced Pivot Tables', 'Data Validation', 'INDEX and MATCH', 'Text Functions', 'Date and Time Functions', 'SUMIF and COUNTIF', 'Array Formulas', 'Macros Basics', 'Data Analysis', 'Dashboard Creation', 'Real-World Project'],
+    
+    // Languages
+    'spanish': ['Basic Greetings and Introductions', 'Numbers and Counting', 'Present Tense Regular Verbs', 'Common Nouns and Articles', 'Adjectives and Descriptions', 'Question Words', 'Irregular Verbs (Ser, Estar)', 'Family and Relationships', 'Food and Restaurants', 'Daily Routine Vocabulary', 'Past Tense Basics', 'Future Tense', 'Directions and Locations', 'Shopping and Money', 'Weather and Seasons', 'Hobbies and Free Time', 'Making Plans', 'Conversation Practice', 'Cultural Topics', 'Real Conversations'],
+    
+    // Other
+    'cooking': ['Knife Skills and Safety', 'Basic Cutting Techniques', 'Sautéing Basics', 'Boiling and Blanching', 'Roasting Vegetables', 'Cooking Proteins', 'Basic Sauces', 'Seasoning and Flavoring', 'Pasta from Scratch', 'Rice Varieties', 'Baking Basics', 'Bread Making', 'Eggs - All Methods', 'Soups and Stocks', 'Meal Prep Basics', 'International Cuisines', 'Desserts', 'Plating and Presentation', 'Menu Planning', 'Full Course Meal']
+  };
+  
+  // Find matching topic set
+  for (const [keyword, topics] of Object.entries(topicLibrary)) {
+    if (skillName.includes(keyword)) {
+      return topics.slice(0, totalDays);
+    }
+  }
+  
+  // Generic fallback
+  const genericTopics = [];
+  for (let i = 1; i <= totalDays; i++) {
+    const phase = i <= totalDays * 0.3 ? 'Fundamentals' : 
+                  i <= totalDays * 0.6 ? 'Intermediate Techniques' : 
+                  'Advanced Application';
+    genericTopics.push(`${phase} - Session ${i}`);
+  }
+  return genericTopics;
 }
 
 export default { generatePlan, checkTimelineAndSuggest };
