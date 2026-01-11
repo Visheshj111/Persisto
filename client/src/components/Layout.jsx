@@ -48,8 +48,8 @@ export default function Layout() {
       <header className="bg-white dark:bg-neutral-900 border-b border-gray-200 dark:border-neutral-800 sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <img src="/logo.png" alt="Consistify" className="w-8 h-8 rounded-lg object-cover" />
-            <h1 className="text-lg font-bold text-neutral-900 dark:text-white">Consistify</h1>
+            <img src="/logo.png" alt="Persisto" className="w-8 h-8 rounded-lg object-cover" />
+            <h1 className="text-lg font-bold text-neutral-900 dark:text-white">Persisto</h1>
           </div>
           
           <div className="flex items-center gap-2">
