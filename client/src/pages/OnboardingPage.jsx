@@ -88,6 +88,8 @@ export default function OnboardingPage() {
   const [selectedFriend, setSelectedFriend] = useState(null)
   const [inviteSent, setInviteSent] = useState(false)
   const [generatedPlan, setGeneratedPlan] = useState(null)
+  const [tempGoalId, setTempGoalId] = useState(null)
+  const [pollingInterval, setPollingInterval] = useState(null)
 
   useEffect(() => {
     // Fetch friends list when component mounts
@@ -100,7 +102,14 @@ export default function OnboardingPage() {
       }
     }
     fetchFriends()
-  }, [])
+
+    // Cleanup polling when component unmounts
+    return () => {
+      if (pollingInterval) {
+        clearInterval(pollingInterval)
+      }
+    }
+  }, [pollingInterval])
 
   const handleTypeSelect = (type) => {
     setGoalType(type)
@@ -133,6 +142,34 @@ export default function OnboardingPage() {
     setStep(step - 1)
   }
 
+  // Poll for partner acceptance and auto-start goal
+  const startPollingForPartnerAcceptance = (friendId) => {
+    const interval = setInterval(async () => {
+      try {
+        // Check if a new shared goal with this friend has been created
+        const goalsRes = await api.get('/goals')
+        const goals = goalsRes.data
+        
+        // Find a shared goal with the invited friend
+        const sharedGoal = goals.find(g => g.isSharedGoal && g.partnerId === friendId)
+        
+        if (sharedGoal) {
+          // Partner has accepted! Auto-start the journey
+          clearInterval(interval)
+          setPollingInterval(null)
+          
+          // Auto-complete onboarding and navigate to dashboard
+          await updateUser({ onboardingComplete: true })
+          navigate('/')
+        }
+      } catch (error) {
+        console.error('Error polling for partner acceptance:', error)
+      }
+    }, 2000) // Poll every 2 seconds
+    
+    setPollingInterval(interval)
+  }
+
   // Generate plan and optionally invite friend
   const handleSubmit = async () => {
     if (isLoading) return;
@@ -153,6 +190,11 @@ export default function OnboardingPage() {
         
         console.log('Shared goal invite sent:', result);
         setInviteSent(true);
+        
+        // Start polling for partner acceptance - when they accept, auto-start journey
+        if (selectedFriend.id) {
+          startPollingForPartnerAcceptance(selectedFriend.id);
+        }
         
         // Show waiting message instead of navigating
         return;

@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useGoalStore } from '../store/goalStore'
-import { Check, Lock, Circle, Clock, ArrowLeft, X, Target, BookOpen, Play, FileText, ExternalLink, ChevronLeft, ChevronRight, Users } from 'lucide-react'
+import { Check, Lock, Circle, Clock, ArrowLeft, X, Target, BookOpen, Play, FileText, ExternalLink, ChevronLeft, ChevronRight, Users, RefreshCw } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import api from '../utils/api'
 
@@ -16,6 +16,7 @@ export default function RoadmapPage() {
   // Partner progress state
   const [partnerData, setPartnerData] = useState(null)
   const [showPartnerView, setShowPartnerView] = useState(false)
+  const [isRefreshing, setIsRefreshing] = useState(false)
 
   const getResourceIcon = (type) => {
     switch (type) {
@@ -65,6 +66,19 @@ export default function RoadmapPage() {
         left: direction === 'left' ? -scrollAmount : scrollAmount,
         behavior: 'smooth'
       })
+    }
+  }
+
+  const refreshPartnerProgress = async () => {
+    if (!activeGoal || !activeGoal.partnerId) return
+    setIsRefreshing(true)
+    try {
+      const partnerRes = await api.get(`/goals/${activeGoal.id || activeGoal._id}/partner-progress`)
+      setPartnerData(partnerRes.data)
+    } catch (error) {
+      console.error('Failed to refresh partner progress:', error)
+    } finally {
+      setIsRefreshing(false)
     }
   }
 
@@ -135,6 +149,14 @@ export default function RoadmapPage() {
                 )}
               </div>
               {partnerData.partner?.name}'s Progress
+            </button>
+            <button
+              onClick={refreshPartnerProgress}
+              disabled={isRefreshing}
+              title="Refresh partner progress"
+              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors disabled:opacity-50"
+            >
+              <RefreshCw className={`w-5 h-5 text-gray-600 dark:text-gray-400 ${isRefreshing ? 'animate-spin' : ''}`} />
             </button>
           </div>
         )}
