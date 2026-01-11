@@ -33,12 +33,10 @@ export default function RoadmapPage() {
 
   const fetchAllTasks = async () => {
     try {
-      let goalData = activeGoal
-      if (!activeGoal) {
-        const goalRes = await api.get('/goals/active')
-        if (!goalRes.data) return
-        goalData = goalRes.data
-      }
+      // Always fetch fresh goal data to ensure we have latest partnerId info
+      const goalRes = await api.get('/goals/active')
+      if (!goalRes.data) return
+      const goalData = goalRes.data
       
       const tasksRes = await api.get(`/tasks/all/${goalData.id || goalData._id}`)
       setAllTasks(tasksRes.data)

@@ -1,31 +1,86 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Outlet, NavLink, useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../store/authStore'
-import { Home, Users, Settings, LogOut, Map, BookOpen, Moon, Sun, Zap } from 'lucide-react'
+import { Home, Users, LogOut, Map, BookOpen, Moon, Sun, Monitor, Settings, ChevronDown, Palette, Check } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
+
+const THEME_COLORS = [
+  { id: 'default', name: 'Default', primary: '#171717', accent: '#525252' },
+  { id: 'cyan', name: 'Cyan', primary: '#0891b2', accent: '#06b6d4' },
+  { id: 'teal', name: 'Teal', primary: '#0d9488', accent: '#14b8a6' },
+  { id: 'amber', name: 'Warm', primary: '#b45309', accent: '#d97706' },
+  { id: 'rose', name: 'Rose', primary: '#be123c', accent: '#e11d48' },
+  { id: 'violet', name: 'Violet', primary: '#7c3aed', accent: '#8b5cf6' },
+]
+
+const APPEARANCE_MODES = [
+  { id: 'light', name: 'Light', icon: Sun },
+  { id: 'dark', name: 'Dark', icon: Moon },
+  { id: 'system', name: 'System', icon: Monitor },
+]
 
 export default function Layout() {
   const { user, logout } = useAuthStore()
   const navigate = useNavigate()
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
-  const [darkMode, setDarkMode] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('darkMode') === 'true' || 
-             window.matchMedia('(prefers-color-scheme: dark)').matches
-    }
-    return false
+  const [showProfileMenu, setShowProfileMenu] = useState(false)
+  const [showThemeSubmenu, setShowThemeSubmenu] = useState(false)
+  const profileMenuRef = useRef(null)
+  
+  const [appearanceMode, setAppearanceMode] = useState(() => {
+    return localStorage.getItem('appearanceMode') || 'system'
+  })
+  
+  const [themeColor, setThemeColor] = useState(() => {
+    return localStorage.getItem('themeColor') || 'default'
   })
 
+  // Handle appearance mode changes
   useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add('dark')
-    } else {
-      document.documentElement.classList.remove('dark')
+    const applyDarkMode = (isDark) => {
+      if (isDark) {
+        document.documentElement.classList.add('dark')
+      } else {
+        document.documentElement.classList.remove('dark')
+      }
     }
-    localStorage.setItem('darkMode', darkMode)
-  }, [darkMode])
+
+    if (appearanceMode === 'system') {
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+      applyDarkMode(mediaQuery.matches)
+      
+      const handler = (e) => applyDarkMode(e.matches)
+      mediaQuery.addEventListener('change', handler)
+      return () => mediaQuery.removeEventListener('change', handler)
+    } else {
+      applyDarkMode(appearanceMode === 'dark')
+    }
+    
+    localStorage.setItem('appearanceMode', appearanceMode)
+  }, [appearanceMode])
+
+  // Handle theme color changes
+  useEffect(() => {
+    const theme = THEME_COLORS.find(t => t.id === themeColor) || THEME_COLORS[0]
+    document.documentElement.style.setProperty('--theme-primary', theme.primary)
+    document.documentElement.style.setProperty('--theme-accent', theme.accent)
+    localStorage.setItem('themeColor', themeColor)
+  }, [themeColor])
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (profileMenuRef.current && !profileMenuRef.current.contains(event.target)) {
+        setShowProfileMenu(false)
+        setShowThemeSubmenu(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   const handleLogout = () => {
+    setShowProfileMenu(false)
     setShowLogoutConfirm(true)
   }
 
@@ -39,7 +94,6 @@ export default function Layout() {
     { to: '/', icon: Home, label: 'Today' },
     { to: '/skills', icon: BookOpen, label: 'My Skills' },
     { to: '/roadmap', icon: Map, label: 'Roadmap' },
-    { to: '/settings', icon: Settings, label: 'Settings' },
   ]
 
   return (
@@ -52,33 +106,137 @@ export default function Layout() {
             <h1 className="text-lg font-bold text-neutral-900 dark:text-white">Persisto</h1>
           </div>
           
-          <div className="flex items-center gap-2">
-            {/* Dark mode toggle */}
+          {/* Profile Dropdown */}
+          <div className="relative" ref={profileMenuRef}>
             <button 
-              onClick={() => setDarkMode(!darkMode)}
-              className="p-2 text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200 transition-colors"
-              aria-label="Toggle dark mode"
+              onClick={() => {
+                setShowProfileMenu(!showProfileMenu)
+                setShowThemeSubmenu(false)
+              }}
+              className="flex items-center gap-2 p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors"
             >
-              {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-            </button>
-            
-            <div className="flex items-center gap-2">
-              {user?.picture && (
+              {user?.picture ? (
                 <img 
                   src={user.picture} 
                   alt={user.name} 
                   className="w-8 h-8 rounded-full"
                 />
+              ) : (
+                <div className="w-8 h-8 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center">
+                  <span className="text-sm font-bold text-white">{user?.name?.charAt(0)}</span>
+                </div>
               )}
               <span className="text-sm text-neutral-600 dark:text-neutral-300 hidden sm:inline">{user?.name}</span>
-            </div>
-            <button 
-              onClick={handleLogout}
-              className="p-2 text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200 transition-colors"
-              aria-label="Logout"
-            >
-              <LogOut className="w-5 h-5" />
+              <ChevronDown className={`w-4 h-4 text-neutral-400 transition-transform ${showProfileMenu ? 'rotate-180' : ''}`} />
             </button>
+
+            <AnimatePresence>
+              {showProfileMenu && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="absolute right-0 mt-2 w-56 bg-white dark:bg-neutral-900 rounded-xl shadow-lg border border-gray-200 dark:border-neutral-700 overflow-hidden z-50"
+                >
+                  {/* User Info */}
+                  <div className="px-4 py-3 border-b border-gray-100 dark:border-neutral-800">
+                    <p className="font-medium text-neutral-900 dark:text-white truncate">{user?.name}</p>
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400 truncate">{user?.email}</p>
+                  </div>
+
+                  {/* Settings */}
+                  <button
+                    onClick={() => {
+                      setShowProfileMenu(false)
+                      navigate('/settings')
+                    }}
+                    className="w-full px-4 py-2.5 flex items-center gap-3 text-neutral-700 dark:text-neutral-200 hover:bg-gray-50 dark:hover:bg-neutral-800 transition-colors text-left"
+                  >
+                    <Settings className="w-4 h-4" />
+                    <span className="text-sm">Settings</span>
+                  </button>
+
+                  {/* Themes */}
+                  <div className="relative">
+                    <button
+                      onClick={() => setShowThemeSubmenu(!showThemeSubmenu)}
+                      className="w-full px-4 py-2.5 flex items-center justify-between text-neutral-700 dark:text-neutral-200 hover:bg-gray-50 dark:hover:bg-neutral-800 transition-colors text-left"
+                    >
+                      <div className="flex items-center gap-3">
+                        <Palette className="w-4 h-4" />
+                        <span className="text-sm">Themes</span>
+                      </div>
+                      <ChevronDown className={`w-4 h-4 transition-transform ${showThemeSubmenu ? 'rotate-180' : ''}`} />
+                    </button>
+
+                    <AnimatePresence>
+                      {showThemeSubmenu && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: 'auto' }}
+                          exit={{ opacity: 0, height: 0 }}
+                          className="bg-gray-50 dark:bg-neutral-800/50 overflow-hidden"
+                        >
+                          {/* Color Themes */}
+                          <div className="px-4 py-2">
+                            <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-2">Color</p>
+                            <div className="flex flex-wrap gap-2">
+                              {THEME_COLORS.map((theme) => (
+                                <button
+                                  key={theme.id}
+                                  onClick={() => setThemeColor(theme.id)}
+                                  title={theme.name}
+                                  className={`w-6 h-6 rounded-full flex items-center justify-center transition-transform hover:scale-110 ${
+                                    themeColor === theme.id ? 'ring-2 ring-offset-2 ring-neutral-400 dark:ring-neutral-500 dark:ring-offset-neutral-900' : ''
+                                  }`}
+                                  style={{ backgroundColor: theme.primary }}
+                                >
+                                  {themeColor === theme.id && <Check className="w-3 h-3 text-white" />}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* Appearance Mode */}
+                          <div className="px-4 py-2 border-t border-gray-100 dark:border-neutral-700">
+                            <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-2">Appearance</p>
+                            <div className="space-y-1">
+                              {APPEARANCE_MODES.map((mode) => (
+                                <button
+                                  key={mode.id}
+                                  onClick={() => setAppearanceMode(mode.id)}
+                                  className={`w-full px-3 py-1.5 flex items-center gap-2 rounded-lg text-sm transition-colors ${
+                                    appearanceMode === mode.id
+                                      ? 'bg-neutral-200 dark:bg-neutral-700 text-neutral-900 dark:text-white'
+                                      : 'text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-700/50'
+                                  }`}
+                                >
+                                  <mode.icon className="w-4 h-4" />
+                                  {mode.name}
+                                  {appearanceMode === mode.id && <Check className="w-3 h-3 ml-auto" />}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+
+                  {/* Divider */}
+                  <div className="border-t border-gray-100 dark:border-neutral-800" />
+
+                  {/* Logout */}
+                  <button
+                    onClick={handleLogout}
+                    className="w-full px-4 py-2.5 flex items-center gap-3 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors text-left"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    <span className="text-sm">Log out</span>
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
       </header>

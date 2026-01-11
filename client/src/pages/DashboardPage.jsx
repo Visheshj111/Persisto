@@ -7,7 +7,7 @@ import {
   Check,
   XCircle, 
   Clock, 
-  Sparkles,
+  Trophy,
   ChevronDown,
   ChevronUp,
   Plus,
@@ -206,7 +206,7 @@ export default function DashboardPage() {
           }`}
         >
           {showConfirmation === 'complete' ? (
-            <Sparkles className="w-12 h-12 text-gray-600 dark:text-gray-300" />
+            <Trophy className="w-12 h-12 text-gray-600 dark:text-gray-300" />
           ) : (
             <Zap className="w-12 h-12 text-gray-500 dark:text-gray-400" />
           )}

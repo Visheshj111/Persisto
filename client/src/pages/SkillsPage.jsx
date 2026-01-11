@@ -11,7 +11,7 @@ import {
   Check,
   AlertCircle,
   Loader2,
-  Sparkles,
+  ArrowRight,
   Zap,
   Info,
   ChevronDown,
@@ -247,7 +247,7 @@ export default function SkillsPage() {
                           {isSwitching === goal._id ? (
                             <Loader2 className="w-4 h-4 animate-spin" />
                           ) : (
-                            <Sparkles className="w-4 h-4" />
+                            <ArrowRight className="w-4 h-4" />
                           )}
                           Switch to this
                         </button>
