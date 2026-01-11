@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useGoalStore } from '../store/goalStore'
 import api from '../utils/api'
 import { 
-  CheckCircle2, 
+  Check,
   XCircle, 
   Clock, 
   Sparkles,
@@ -495,7 +495,7 @@ export default function DashboardPage() {
                             ? 'border-gray-500 bg-gray-500' 
                             : 'border-gray-300 dark:border-gray-600'
                         }`}>
-                          {item.completed && <CheckCircle2 className="w-4 h-4 text-white" />}
+                          {item.completed && <Check className="w-4 h-4 text-white" />}
                         </div>
                         <span className={item.completed ? 'line-through' : ''}>
                           {item.text}
@@ -529,7 +529,7 @@ export default function DashboardPage() {
                   {completing ? (
                     <Loader2 className="w-5 h-5 animate-spin" />
                   ) : (
-                    <CheckCircle2 className="w-5 h-5" />
+                    <Check className="w-5 h-5" />
                   )}
                   {allItemsCompleted ? 'Completed' : 'Check all items'}
                 </button>

@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useGoalStore } from '../store/goalStore'
-import { CheckCircle2, Lock, Circle, Clock, ArrowLeft, X, Target, BookOpen, Play, FileText, ExternalLink, ChevronLeft, ChevronRight, Users } from 'lucide-react'
+import { Check, Lock, Circle, Clock, ArrowLeft, X, Target, BookOpen, Play, FileText, ExternalLink, ChevronLeft, ChevronRight, Users } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import api from '../utils/api'
 
@@ -274,7 +274,7 @@ export default function RoadmapPage() {
                       'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600'}
                   `}>
                     {isCompleted ? (
-                      <CheckCircle2 className="w-7 h-7 text-white dark:text-gray-900" />
+                      <Check className="w-7 h-7 text-white dark:text-gray-900" />
                     ) : isNext ? (
                       <Circle className="w-7 h-7 text-white dark:text-gray-900" />
                     ) : isLocked ? (
@@ -466,7 +466,7 @@ export default function RoadmapPage() {
                             : 'border-gray-300 dark:border-gray-600'
                         }`}>
                           {(selectedTask.status === 'completed' || item.completed) && (
-                            <CheckCircle2 className="w-3 h-3 text-white" />
+                            <Check className="w-3 h-3 text-white" />
                           )}
                         </div>
                         <span className={`${

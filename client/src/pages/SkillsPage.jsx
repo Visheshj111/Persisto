@@ -8,7 +8,7 @@ import {
   ChevronRight, 
   Target, 
   Clock, 
-  CheckCircle2,
+  Check,
   AlertCircle,
   Loader2,
   Sparkles,
@@ -216,7 +216,7 @@ export default function SkillsPage() {
                       </div>
                       {goal.isCompleted && (
                         <div className="flex items-center gap-1 text-gray-700 dark:text-gray-300">
-                          <CheckCircle2 className="w-4 h-4" />
+                          <Check className="w-4 h-4" />
                           <span>Completed!</span>
                         </div>
                       )}
