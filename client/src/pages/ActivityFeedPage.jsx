@@ -283,13 +283,6 @@ export default function ActivityFeedPage() {
             </div>
           )}
         </div>
-
-        {/* Encouraging footer */}
-        <div className="text-center py-4">
-          <p className="text-gray-400 dark:text-gray-500 text-sm">
-            We're all on our own journey. Celebrate every small step.
-          </p>
-        </div>
       </div>
 
       {/* Right Sidebar - Friends (Desktop only) */}
