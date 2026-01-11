@@ -252,10 +252,11 @@ export default function Layout() {
                 className={({ isActive }) =>
                   `flex items-center gap-2 px-3 py-3 text-sm font-medium transition-colors relative whitespace-nowrap ${
                     isActive 
-                      ? 'text-neutral-900 dark:text-white' 
+                      ? '' 
                       : 'text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200'
                   }`
                 }
+                style={({ isActive }) => isActive ? { color: 'var(--theme-primary)' } : {}}
               >
                 {({ isActive }) => (
                   <>
@@ -264,7 +265,8 @@ export default function Layout() {
                     {isActive && (
                       <motion.div
                         layoutId="activeTab"
-                        className="absolute bottom-0 left-0 right-0 h-0.5 bg-neutral-900 dark:bg-white"
+                        className="absolute bottom-0 left-0 right-0 h-0.5"
+                        style={{ backgroundColor: 'var(--theme-primary)' }}
                       />
                     )}
                   </>

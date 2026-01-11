@@ -17,6 +17,7 @@ export default function RoadmapPage() {
   const [partnerData, setPartnerData] = useState(null)
   const [showPartnerView, setShowPartnerView] = useState(false)
   const [isRefreshing, setIsRefreshing] = useState(false)
+  const [currentGoal, setCurrentGoal] = useState(null)
 
   const getResourceIcon = (type) => {
     switch (type) {
@@ -37,6 +38,7 @@ export default function RoadmapPage() {
       const goalRes = await api.get('/goals/active')
       if (!goalRes.data) return
       const goalData = goalRes.data
+      setCurrentGoal(goalData)
       
       const tasksRes = await api.get(`/tasks/all/${goalData.id || goalData._id}`)
       setAllTasks(tasksRes.data)
@@ -68,10 +70,10 @@ export default function RoadmapPage() {
   }
 
   const refreshPartnerProgress = async () => {
-    if (!activeGoal || !activeGoal.partnerId) return
+    if (!currentGoal || !currentGoal.partnerId) return
     setIsRefreshing(true)
     try {
-      const partnerRes = await api.get(`/goals/${activeGoal.id || activeGoal._id}/partner-progress`)
+      const partnerRes = await api.get(`/goals/${currentGoal.id || currentGoal._id}/partner-progress`)
       setPartnerData(partnerRes.data)
     } catch (error) {
       console.error('Failed to refresh partner progress:', error)
@@ -112,7 +114,7 @@ export default function RoadmapPage() {
           </button>
           <div>
             <h1 className="text-2xl font-semibold text-gray-800 dark:text-gray-100">Your Roadmap</h1>
-            <p className="text-gray-500 dark:text-gray-400">{activeGoal?.title || 'Skill Journey'}</p>
+            <p className="text-gray-500 dark:text-gray-400">{currentGoal?.title || activeGoal?.title || 'Skill Journey'}</p>
           </div>
         </div>
         
