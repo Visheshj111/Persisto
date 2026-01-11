@@ -239,7 +239,6 @@ export default function DashboardPage() {
               {todayTask.phase && (
                 <p className="text-xs text-gray-500 dark:text-gray-400 font-medium mb-1">{todayTask.phase}</p>
               )}
-              <p className="text-sm text-gray-600 dark:text-gray-400 font-medium mb-1">Today's Focus</p>
               <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100">{todayTask.title}</h2>
             </div>
             <div className="flex items-center gap-1 text-gray-400 dark:text-gray-500 text-sm">
@@ -252,14 +251,31 @@ export default function DashboardPage() {
             {todayTask.description}
           </p>
 
-          {/* Skill Progression - Outcome */}
-          {todayTask.skillProgression && (
+          {/* Where to Learn - Resources inline */}
+          {todayTask.resources && todayTask.resources.length > 0 && (
             <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700">
-              <div className="flex items-center gap-2 mb-1">
-                <Target className="w-4 h-4 text-gray-500 dark:text-gray-400" />
-                <span className="text-sm font-semibold text-gray-700 dark:text-gray-200">Outcome</span>
+              <div className="flex items-center gap-2 mb-3">
+                <BookOpen className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                <span className="text-sm font-semibold text-gray-700 dark:text-gray-200">Where to learn</span>
               </div>
-              <p className="text-gray-700 dark:text-gray-300">{todayTask.skillProgression}</p>
+              <div className="space-y-2">
+                {todayTask.resources.slice(0, 3).map((resource, index) => {
+                  const IconComponent = getResourceIcon(resource.type)
+                  return (
+                    <a
+                      key={index}
+                      href={resource.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors"
+                    >
+                      <IconComponent className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                      <span className="text-sm truncate">{resource.title || 'Resource'}</span>
+                      <ExternalLink className="w-3 h-3 opacity-50 flex-shrink-0" />
+                    </a>
+                  )
+                })}
+              </div>
             </div>
           )}
 
