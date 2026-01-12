@@ -46,9 +46,9 @@ export default function LoginPage() {
           <motion.div
             animate={{ scale: [1, 1.05, 1] }}
             transition={{ duration: 4, repeat: Infinity }}
-            className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-black dark:bg-white mb-6 shadow-lg"
+            className="inline-flex items-center justify-center mb-6"
           >
-            <img src="/logo.png" alt="Persisto Logo" className="w-10 h-10 object-contain" />
+            <img src="/logo.png" alt="Persisto Logo" className="w-20 h-20 object-contain" />
           </motion.div>
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">Persisto</h1>
           <p className="text-gray-500 dark:text-gray-400 text-lg">Build skills with consistency</p>
