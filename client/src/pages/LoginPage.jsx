@@ -32,24 +32,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-white dark:bg-black">
-      {/* Background decorative elements */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <motion.div
-          animate={{ y: [0, -20, 0], x: [0, 10, 0] }}
-          transition={{ duration: 8, repeat: Infinity }}
-          className="absolute top-20 left-10 w-32 h-32 rounded-full bg-gray-200/30 dark:bg-gray-800/30"
-        />
-        <motion.div
-          animate={{ y: [0, 20, 0], x: [0, -10, 0] }}
-          transition={{ duration: 10, repeat: Infinity }}
-          className="absolute bottom-20 right-10 w-48 h-48 rounded-full bg-gray-300/30 dark:bg-gray-700/30"
-        />
-        <motion.div
-          animate={{ y: [0, 15, 0] }}
-          transition={{ duration: 6, repeat: Infinity }}
-          className="absolute top-40 right-20 w-24 h-24 rounded-full bg-gray-100/40 dark:bg-gray-900/40"
-        />
-      </div>
+      {/* Background decorative elements removed */}
 
       {/* Main content */}
       <motion.div

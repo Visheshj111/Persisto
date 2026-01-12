@@ -67,6 +67,10 @@ const DAILY_TIME_OPTIONS = [
   { value: 60, label: '1 hour' },
   { value: 90, label: '1.5 hours' },
   { value: 120, label: '2 hours' },
+  { value: 180, label: '3 hours' },
+  { value: 240, label: '4 hours' },
+  { value: 360, label: '6 hours' },
+  { value: 480, label: '8 hours' },
 ]
 
 export default function OnboardingPage() {
@@ -484,7 +488,7 @@ export default function OnboardingPage() {
                   How much time can you dedicate each day?
                 </p>
 
-                <div className="grid grid-cols-3 gap-3 mb-6">
+                <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-6">
                   {DAILY_TIME_OPTIONS.map((option) => (
                     <button
                       key={option.value}
