@@ -28,9 +28,10 @@ const HOST = '0.0.0.0';
 
 // Middleware
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'https://consistify-client.vercel.app',
+  origin: [
+    process.env.CLIENT_URL || 'https://consistify-client.vercel.app'],
   credentials: true
-}));  
+}));
 app.use(express.json());
 
 // Root route
