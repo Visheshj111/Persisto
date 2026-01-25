@@ -12,7 +12,10 @@ import {
   Eye,
   EyeOff,
   Info,
-  X
+  X,
+  Key,
+  Bot,
+  ExternalLink
 } from 'lucide-react'
 import api from '../utils/api'
 
@@ -23,9 +26,14 @@ export default function SettingsPage() {
     reminderEnabled: user?.reminderEnabled ?? true,
     timezone: user?.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone
   })
+  const [openaiApiKey, setOpenaiApiKey] = useState('')
+  const [showApiKey, setShowApiKey] = useState(false)
+  const [hasExistingKey, setHasExistingKey] = useState(user?.hasOpenaiApiKey ?? false)
   const [isSaving, setIsSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [showPrivacyNote, setShowPrivacyNote] = useState(false)
+  const [apiKeySaved, setApiKeySaved] = useState(false)
+  const [isSavingApiKey, setIsSavingApiKey] = useState(false)
 
   const handleToggle = (key) => {
     setSettings(prev => ({
@@ -33,6 +41,35 @@ export default function SettingsPage() {
       [key]: !prev[key]
     }))
     setSaved(false)
+  }
+
+  const handleSaveApiKey = async () => {
+    setIsSavingApiKey(true)
+    try {
+      const response = await api.patch('/users/settings', { openaiApiKey })
+      setHasExistingKey(response.data.hasOpenaiApiKey)
+      updateUser({ hasOpenaiApiKey: response.data.hasOpenaiApiKey })
+      setApiKeySaved(true)
+      setOpenaiApiKey('') // Clear the input after saving
+      setTimeout(() => setApiKeySaved(false), 2000)
+    } catch (error) {
+      console.error('Failed to save API key:', error)
+    } finally {
+      setIsSavingApiKey(false)
+    }
+  }
+
+  const handleRemoveApiKey = async () => {
+    setIsSavingApiKey(true)
+    try {
+      const response = await api.patch('/users/settings', { openaiApiKey: '' })
+      setHasExistingKey(false)
+      updateUser({ hasOpenaiApiKey: false })
+    } catch (error) {
+      console.error('Failed to remove API key:', error)
+    } finally {
+      setIsSavingApiKey(false)
+    }
   }
 
   const handleSave = async () => {
@@ -152,6 +189,90 @@ export default function SettingsPage() {
               </motion.div>
             )}
           </AnimatePresence>
+        </div>
+      </div>
+
+      {/* AI Study Bot Settings */}
+      <div className="calm-card">
+        <h2 className="font-semibold text-gray-700 dark:text-gray-200 mb-4 flex items-center gap-2">
+          <Bot className="w-5 h-5" />
+          AI Study Bot
+        </h2>
+        
+        <div className="space-y-4">
+          <div className="p-4 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 rounded-xl">
+            <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
+              Add your OpenAI API key to unlock the AI Study Bot. It will help you learn and understand the topics in your daily tasks.
+            </p>
+            <a 
+              href="https://platform.openai.com/api-keys" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-sm text-blue-600 dark:text-blue-400 hover:underline inline-flex items-center gap-1"
+            >
+              Get your API key from OpenAI <ExternalLink className="w-3 h-3" />
+            </a>
+          </div>
+
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <Key className="w-5 h-5 text-gray-400 dark:text-gray-500" />
+              <p className="font-medium text-gray-700 dark:text-gray-200">OpenAI API Key</p>
+              {hasExistingKey && (
+                <span className="px-2 py-0.5 text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full">
+                  Configured
+                </span>
+              )}
+            </div>
+            
+            <div className="relative">
+              <input
+                type={showApiKey ? 'text' : 'password'}
+                value={openaiApiKey}
+                onChange={(e) => setOpenaiApiKey(e.target.value)}
+                placeholder={hasExistingKey ? '••••••••••••••••••••' : 'sk-...'}
+                className="calm-input pr-10"
+              />
+              <button
+                type="button"
+                onClick={() => setShowApiKey(!showApiKey)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+              >
+                {showApiKey ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
+            </div>
+
+            <div className="flex gap-2">
+              <button
+                onClick={handleSaveApiKey}
+                disabled={!openaiApiKey.trim() || isSavingApiKey}
+                className="calm-button-primary flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isSavingApiKey ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : apiKeySaved ? (
+                  <CheckCircle className="w-4 h-4" />
+                ) : (
+                  <Save className="w-4 h-4" />
+                )}
+                {apiKeySaved ? 'Saved!' : hasExistingKey ? 'Update Key' : 'Save Key'}
+              </button>
+              
+              {hasExistingKey && (
+                <button
+                  onClick={handleRemoveApiKey}
+                  disabled={isSavingApiKey}
+                  className="px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                >
+                  Remove Key
+                </button>
+              )}
+            </div>
+
+            <p className="text-xs text-gray-500 dark:text-gray-400">
+              Your API key is stored securely and only used to power the AI Study Bot. You can remove it anytime.
+            </p>
+          </div>
         </div>
       </div>
 

@@ -54,6 +54,10 @@ const userSchema = new mongoose.Schema({
     },
     createdAt: { type: Date, default: Date.now }
   }],
+  openaiApiKey: {
+    type: String,
+    default: null
+  },
   createdAt: {
     type: Date,
     default: Date.now

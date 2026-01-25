@@ -9,7 +9,7 @@ const router = express.Router();
 // Update user settings
 router.patch('/settings', authenticateToken, async (req, res) => {
   try {
-    const { showInActivityFeed, reminderEnabled, timezone } = req.body;
+    const { showInActivityFeed, reminderEnabled, timezone, openaiApiKey } = req.body;
     
     const updates = {};
     if (typeof showInActivityFeed === 'boolean') {
@@ -20,6 +20,10 @@ router.patch('/settings', authenticateToken, async (req, res) => {
     }
     if (timezone) {
       updates.timezone = timezone;
+    }
+    if (typeof openaiApiKey === 'string') {
+      // Allow setting to empty string to remove the key
+      updates.openaiApiKey = openaiApiKey.trim() || null;
     }
 
     const user = await User.findByIdAndUpdate(
@@ -35,7 +39,8 @@ router.patch('/settings', authenticateToken, async (req, res) => {
       picture: user.picture,
       showInActivityFeed: user.showInActivityFeed,
       reminderEnabled: user.reminderEnabled,
-      timezone: user.timezone
+      timezone: user.timezone,
+      hasOpenaiApiKey: Boolean(user.openaiApiKey)
     });
   } catch (error) {
     console.error('Update settings error:', error);
@@ -71,6 +76,7 @@ router.get('/profile', authenticateToken, async (req, res) => {
       showInActivityFeed: user.showInActivityFeed,
       reminderEnabled: user.reminderEnabled,
       timezone: user.timezone,
+      hasOpenaiApiKey: Boolean(user.openaiApiKey),
       friends: user.friends || [],
       friendRequests: friendRequestsWithInfo,
       createdAt: user.createdAt

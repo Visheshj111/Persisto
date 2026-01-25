@@ -20,6 +20,7 @@ import goalRoutes from './routes/goals.js';
 import taskRoutes from './routes/tasks.js';
 import activityRoutes from './routes/activity.js';
 import userRoutes from './routes/users.js';
+import aiChatRoutes from './routes/aiChat.js';
 import { sendDailyReminders } from './services/reminderService.js';
 
 const app = express();
@@ -45,6 +46,7 @@ app.use('/api/goals', goalRoutes);
 app.use('/api/tasks', taskRoutes);
 app.use('/api/activity', activityRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/ai', aiChatRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

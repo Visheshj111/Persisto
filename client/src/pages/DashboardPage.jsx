@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useGoalStore } from '../store/goalStore'
 import api from '../utils/api'
+import AIStudyBot from '../components/AIStudyBot'
 import { 
   Check,
   XCircle, 
@@ -607,6 +608,9 @@ export default function DashboardPage() {
 
         </div>
       </div>
+      
+      {/* AI Study Bot - Floating Button */}
+      <AIStudyBot task={todayTask} />
     </motion.div>
   )
 }
