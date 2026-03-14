@@ -16,7 +16,7 @@ const THEME_COLORS = [
 const APPEARANCE_MODES = [
   { id: 'light', name: 'Light', icon: Sun },
   { id: 'dark', name: 'Dark', icon: Moon },
-  { id: 'system', name: 'System', icon: Monitor },
+  { id: 'system', name: 'system', icon: Monitor },
 ]
 
 export default function Layout() {

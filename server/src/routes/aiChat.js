@@ -14,18 +14,21 @@ router.post('/study-chat', authenticateToken, async (req, res) => {
       return res.status(400).json({ error: 'Message is required' });
     }
 
-    // Get user's API key
+    // Get user's API key (preferred), fallback to server key
     const user = await User.findById(req.user._id);
-    if (!user?.openaiApiKey) {
+    const serverApiKey = (process.env.OPENAI_API_KEY || process.env.OPENAL_API_KEY || '').trim();
+    const apiKeyToUse = (user?.openaiApiKey || '').trim() || serverApiKey;
+
+    if (!apiKeyToUse) {
       return res.status(400).json({ 
-        error: 'No OpenAI API key configured. Please add your API key in Settings.',
+        error: 'No OpenAI API key configured. Add one in Settings or set OPENAI_API_KEY on the server.',
         code: 'NO_API_KEY'
       });
     }
 
-    // Initialize OpenAI with user's API key
+    // Initialize OpenAI with selected API key
     const openai = new OpenAI({
-      apiKey: user.openaiApiKey
+      apiKey: apiKeyToUse
     });
 
     // Build system prompt for study assistance
@@ -116,7 +119,8 @@ If the user asks about something unrelated to learning, gently guide them back t
 router.get('/has-api-key', authenticateToken, async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
-    res.json({ hasApiKey: Boolean(user?.openaiApiKey) });
+    const serverApiKey = (process.env.OPENAI_API_KEY || process.env.OPENAL_API_KEY || '').trim();
+    res.json({ hasApiKey: Boolean((user?.openaiApiKey || '').trim() || serverApiKey) });
   } catch (error) {
     console.error('Check API key error:', error);
     res.status(500).json({ error: 'Failed to check API key status' });
