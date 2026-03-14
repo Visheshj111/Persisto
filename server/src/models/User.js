@@ -54,6 +54,11 @@ const userSchema = new mongoose.Schema({
     },
     createdAt: { type: Date, default: Date.now }
   }],
+  geminiApiKey: {
+    type: String,
+    default: null
+  },
+  // Legacy field retained for backward compatibility with older clients/data.
   openaiApiKey: {
     type: String,
     default: null

@@ -1,11 +1,80 @@
 import express from 'express';
-import OpenAI from 'openai';
 import { authenticateToken } from '../middleware/auth.js';
 import User from '../models/User.js';
 
 const router = express.Router();
 
-// AI Study Chat endpoint - uses user's own OpenAI API key
+function getGeminiServerApiKey() {
+  return (process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || '').trim();
+}
+
+function getGeminiChatModel() {
+  return (process.env.GEMINI_CHAT_MODEL || process.env.GEMINI_MODEL || 'gemini-2.0-flash').trim();
+}
+
+function resolveUserGeminiKey(user) {
+  return (user?.geminiApiKey || user?.openaiApiKey || '').trim();
+}
+
+async function generateStudyResponseWithGemini({ apiKey, model, systemPrompt, conversationHistory, message }) {
+  const contents = [];
+
+  for (const entry of conversationHistory.slice(-10)) {
+    if (!entry?.content || typeof entry.content !== 'string') continue;
+    if (entry.role === 'user' || entry.role === 'assistant') {
+      contents.push({
+        role: entry.role === 'assistant' ? 'model' : 'user',
+        parts: [{ text: entry.content }]
+      });
+    }
+  }
+
+  contents.push({ role: 'user', parts: [{ text: message }] });
+
+  const response = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(apiKey)}`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        systemInstruction: {
+          parts: [{ text: systemPrompt }]
+        },
+        contents,
+        generationConfig: {
+          temperature: 0.7,
+          maxOutputTokens: 1000
+        }
+      })
+    }
+  );
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    const err = new Error(data?.error?.message || 'Gemini request failed.');
+    err.status = response.status;
+    throw err;
+  }
+
+  const assistantMessage = data?.candidates?.[0]?.content?.parts
+    ?.map((part) => part.text || '')
+    .join('')
+    .trim();
+
+  if (!assistantMessage) {
+    throw new Error('No response from AI');
+  }
+
+  return {
+    assistantMessage,
+    usage: data?.usageMetadata || null
+  };
+}
+
+// AI Study Chat endpoint - uses user's own Gemini API key
 router.post('/study-chat', authenticateToken, async (req, res) => {
   try {
     const { message, taskContext, conversationHistory = [] } = req.body;
@@ -16,20 +85,15 @@ router.post('/study-chat', authenticateToken, async (req, res) => {
 
     // Get user's API key (preferred), fallback to server key
     const user = await User.findById(req.user._id);
-    const serverApiKey = (process.env.OPENAI_API_KEY || process.env.OPENAL_API_KEY || '').trim();
-    const apiKeyToUse = (user?.openaiApiKey || '').trim() || serverApiKey;
+    const serverApiKey = getGeminiServerApiKey();
+    const apiKeyToUse = resolveUserGeminiKey(user) || serverApiKey;
 
     if (!apiKeyToUse) {
       return res.status(400).json({ 
-        error: 'No OpenAI API key configured. Add one in Settings or set OPENAI_API_KEY on the server.',
+        error: 'No Gemini API key configured. Add one in Settings or set GEMINI_API_KEY on the server.',
         code: 'NO_API_KEY'
       });
     }
-
-    // Initialize OpenAI with selected API key
-    const openai = new OpenAI({
-      apiKey: apiKeyToUse
-    });
 
     // Build system prompt for study assistance
     const systemPrompt = `You are a friendly, encouraging AI study assistant helping someone learn "${taskContext?.title || 'a new topic'}".
@@ -57,51 +121,39 @@ TONE:
 
 If the user asks about something unrelated to learning, gently guide them back to the topic or help them see connections to what they're studying.`;
 
-    // Build messages array
-    const messages = [
-      { role: 'system', content: systemPrompt },
-      ...conversationHistory.slice(-10), // Keep last 10 messages for context
-      { role: 'user', content: message }
-    ];
-
-    // Call OpenAI API
-    const completion = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
-      messages,
-      max_tokens: 1000,
-      temperature: 0.7
+    const { assistantMessage, usage } = await generateStudyResponseWithGemini({
+      apiKey: apiKeyToUse,
+      model: getGeminiChatModel(),
+      systemPrompt,
+      conversationHistory,
+      message
     });
-
-    const assistantMessage = completion.choices[0]?.message?.content;
-
-    if (!assistantMessage) {
-      throw new Error('No response from AI');
-    }
 
     res.json({
       message: assistantMessage,
-      usage: completion.usage
+      usage
     });
 
   } catch (error) {
     console.error('AI Study Chat error:', error);
-    
-    // Handle OpenAI specific errors
-    if (error.code === 'invalid_api_key') {
+
+    const message = (error?.message || '').toLowerCase();
+
+    if (error?.status === 401 || message.includes('api key not valid') || message.includes('invalid api key')) {
       return res.status(401).json({ 
-        error: 'Invalid API key. Please check your OpenAI API key in Settings.',
+        error: 'Invalid API key. Please check your Gemini API key in Settings.',
         code: 'INVALID_API_KEY'
       });
     }
-    
-    if (error.code === 'insufficient_quota') {
+
+    if (error?.status === 429 || message.includes('quota') || message.includes('resource exhausted')) {
       return res.status(402).json({ 
-        error: 'OpenAI API quota exceeded. Please check your billing at platform.openai.com.',
+        error: 'Gemini API quota exceeded. Please check your billing in Google AI Studio.',
         code: 'QUOTA_EXCEEDED'
       });
     }
 
-    if (error.code === 'rate_limit_exceeded') {
+    if (error?.status === 503 || message.includes('rate') || message.includes('too many requests')) {
       return res.status(429).json({ 
         error: 'Too many requests. Please wait a moment and try again.',
         code: 'RATE_LIMITED'
@@ -119,8 +171,8 @@ If the user asks about something unrelated to learning, gently guide them back t
 router.get('/has-api-key', authenticateToken, async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
-    const serverApiKey = (process.env.OPENAI_API_KEY || process.env.OPENAL_API_KEY || '').trim();
-    res.json({ hasApiKey: Boolean((user?.openaiApiKey || '').trim() || serverApiKey) });
+    const serverApiKey = getGeminiServerApiKey();
+    res.json({ hasApiKey: Boolean(resolveUserGeminiKey(user) || serverApiKey) });
   } catch (error) {
     console.error('Check API key error:', error);
     res.status(500).json({ error: 'Failed to check API key status' });

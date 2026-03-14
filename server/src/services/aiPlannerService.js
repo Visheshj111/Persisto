@@ -1,27 +1,66 @@
-import OpenAI from 'openai';
-
-function getApiKey() {
-  // Accept both the intended env var and a common typo seen in some deployments.
-  const rawKey = process.env.OPENAI_API_KEY || process.env.OPENAL_API_KEY;
-  const apiKey = typeof rawKey === 'string' ? rawKey.trim() : '';
-  return apiKey;
+function getGeminiApiKey() {
+  const rawKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
+  return typeof rawKey === 'string' ? rawKey.trim() : '';
 }
 
-// Initialize OpenAI client lazily to ensure env is loaded
-let openai = null;
-function getOpenAI() {
-  if (!openai) {
-    const apiKey = getApiKey();
-    if (!apiKey) {
-      throw new Error(
-        'Missing API key. Set OPENAI_API_KEY (or OPENAL_API_KEY) in the environment.'
-      );
-    }
-    openai = new OpenAI({
-      apiKey
-    });
+function getGeminiModel() {
+  const rawModel = process.env.GEMINI_MODEL;
+  return typeof rawModel === 'string' && rawModel.trim()
+    ? rawModel.trim()
+    : 'gemini-2.0-flash';
+}
+
+async function generateTopicsWithGemini({ systemPrompt, userPrompt }) {
+  const apiKey = getGeminiApiKey();
+
+  if (!apiKey) {
+    throw new Error('Missing Gemini API key. Set GEMINI_API_KEY (or GOOGLE_API_KEY) in the environment.');
   }
-  return openai;
+
+  const model = getGeminiModel();
+  const response = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(apiKey)}`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        contents: [
+          {
+            parts: [
+              {
+                text: `${systemPrompt}\n\n${userPrompt}`
+              }
+            ]
+          }
+        ],
+        generationConfig: {
+          temperature: 0.7,
+          maxOutputTokens: 3000,
+          responseMimeType: 'application/json'
+        }
+      })
+    }
+  );
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    const message = data?.error?.message || 'Gemini request failed.';
+    throw new Error(message);
+  }
+
+  const content = data?.candidates?.[0]?.content?.parts
+    ?.map((part) => part.text || '')
+    .join('')
+    .trim();
+
+  if (!content) {
+    throw new Error('Gemini returned an empty response.');
+  }
+
+  return content;
 }
 
 // Minimum recommended days for different goal types
@@ -121,22 +160,12 @@ Return ONLY a valid JSON array:
 No markdown, no explanations, just the JSON array.`;
 
   try {
-    console.log('🤖 Calling OpenAI to generate topics...');
+    console.log('🤖 Calling Gemini to generate topics...');
     console.log('Goal:', title);
     console.log('Days:', totalDays);
     
-    const response = await getOpenAI().chat.completions.create({
-      model: 'gpt-4o-mini',
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: userPrompt }
-      ],
-      temperature: 0.7,
-      max_tokens: 3000
-    });
-
-    const content = response.choices[0].message.content;
-    console.log('✅ OpenAI Response received');
+    const content = await generateTopicsWithGemini({ systemPrompt, userPrompt });
+    console.log('✅ Gemini response received');
     console.log('Response preview:', content.substring(0, 200));
     
     // Parse the JSON response

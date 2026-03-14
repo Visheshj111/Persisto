@@ -69,7 +69,9 @@ router.post('/google', async (req, res) => {
         name: user.name,
         picture: user.picture,
         onboardingComplete: user.onboardingComplete,
-        showInActivityFeed: user.showInActivityFeed
+        showInActivityFeed: user.showInActivityFeed,
+        reminderEnabled: user.reminderEnabled,
+        hasGeminiApiKey: Boolean((user.geminiApiKey || '').trim() || (user.openaiApiKey || '').trim())
       }
     });
   } catch (error) {
@@ -102,7 +104,8 @@ router.get('/me', async (req, res) => {
       picture: user.picture,
       onboardingComplete: user.onboardingComplete,
       showInActivityFeed: user.showInActivityFeed,
-      reminderEnabled: user.reminderEnabled
+      reminderEnabled: user.reminderEnabled,
+      hasGeminiApiKey: Boolean((user.geminiApiKey || '').trim() || (user.openaiApiKey || '').trim())
     });
   } catch (error) {
     console.error('Auth check error:', error);
